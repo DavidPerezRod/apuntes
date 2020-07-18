@@ -4,7 +4,7 @@
 1. ### [Default methods and static methods in interfaces](./defaultAndStaticInterfaceMethods/defaultAndStaticInterfaceMethods.md)
 2. ### [Functional Interfaces](./functionalInterface/functionalInterface.md)
 3. ### [Lambda expresions](./lambdaExpresions/lambdaExpresions.md)
-4. ### Anonymous inner classes and lambda expesions
+4. ### [Anonymous inner classes and lambda expesions](./lambdaExpresions/anonymousInnerClassVSlambdaExpresions.md)
 5. ### Predefined functional interfaces
    1. #### Predicate
    2. #### Functon

@@ -83,3 +83,13 @@ Puedes encontrar información completa sobre la especificación en <https://docs
 Esta anotación indica al compilador la intención de declarar una interfaz funcional, de forma que éste debe comprobar tanto la declarción de métodos como la herencia.
 
 **Es importante comprender que la anotación no convierte la declaración en una interfaz funcional**
+
+3. ### Herencia
+   *   Si una interfaz hereda de una interfaz funcional y no declara ningún método abstracto, entonces será una interfaz funcional
+   *   Si una interfaz define exactamente los mismos métodos abstractos que la interfaz funcional de la que hereda, estaremos ante otra interfaz funcional.
+   *   Cualquier otra situación en la que una interfaz anotación @FunctionalInterfaz herede de una interfaz funcional y declare nuevos métods abstractos, se obtendrá un error de compilación
+   *   De la misma forma, si una una interfaz hereda de una interfaz funcional y declara nuevos métodos abstractos, estaremos ante una interfaz corriente, no ante un interfaz funcioanl.
+
+| sytax | desciption| sytax | desciption|
+|-------|-----------|-------|-----------|
+| sytax | desciption| sytax | desciption|
