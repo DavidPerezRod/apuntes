@@ -38,4 +38,6 @@ Para la configuración de JUnit5 ademś hay que añadir al bloque de dependencia
 
 Por otro lado los plugins de **surfire** y **failsafe** deben ser 2.2, 2-0 o superiores. El primero es para la ejecución de test JUnit desde maven, y el segundo para enlazar la fase de test en el ciclo de vida de maven.
 
+Para ejecutar test con Maven, desde el directorio del proyecto podemos ejecutar **./mvnw clean test**, o bien **mvn clean test**. El primero ejecuta el wrapper maven del proyecto y el segundo ejecuta directamente Maven. La diferencia, es que pueden ser versiones distintas de Maven, ya que la primera es la que esté instalada en el IDE.
+
 
