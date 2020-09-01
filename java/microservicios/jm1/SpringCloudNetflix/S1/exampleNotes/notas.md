@@ -7,6 +7,8 @@
 
 Otra cosa que hay que tener en cuenta es la url una vez que sale la página de la consola para logarnos, también sale en la consola. En el caso del ejemplo es jdbc:h2:mem.testdb, sin password.
 
+En el caso de intellij, la ruta que hay que poner es distinta, se indica en la consola de arranque de springboot. El formato es parecido a este: jdbc:h2:mem:55b33c9e-6c6d-4198-8ae1-540a6daae831, y es lo que hay que incluir en la configuración en el campo JDBC URL. El resto no se modifica, se deja el mismo usuario y password
+
 5. Crear una clase de configuración de SpringBoot para el autoregistro de componentes, y en la que también se indica el fichero de propiedades que se va a utilizar.
    @Configuration
    @PropertySource("classpath:services.properties")
