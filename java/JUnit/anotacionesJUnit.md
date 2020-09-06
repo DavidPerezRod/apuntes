@@ -7,14 +7,14 @@ Anotación | Funcionalidad
  @TestFactory | métod de factoría de test, para test dinámicos
  @TestInstance | configura el ciclo de vida de las instancias de test
  @TestTemplate | crea una plantilla que puede ser utilizada desde múltiples test
- @DisplayName | denomina al test mediante un nombre más legible para humanos
+ @DisplayName | denomina al test mediante un nombre más legible para humanos. Aunque lo ideal es que los métodos tengan nombres significativos en sí mismos sin necesidad de utilizar esta anotación
  @BeforeEach | método que debe ejecutarse antes que los casos de test
  @AfterEach | método que debe ejecutarse después de los casos de test
  @BeforeAll | modo estático que debe ejecutarse antes que los casos de test de la clase actual
  @AfterAll | método estático que se ejecuta después de casos de test de la clase actual.
  @Nested | crea una clase de test anidada
  @Tag | declara tags para filtrar test
- @Disabled | inhabilita test o clases de test
+ @Disabled | inhabilita test o clases de test, dependiendo de si lo escribimos en el método o la clase
  @ExtendedWith | permite registrar extensiones
 
 La forma de indicar a **maven** la versión de JUnit con la que se está trabajando es mediante el tag <junit-platform.version> dentro del bloque <properties>.
