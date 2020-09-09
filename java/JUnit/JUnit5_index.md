@@ -6,3 +6,4 @@
 3. ### [Anotaciones](./anotacionesJUnit.md)
 4. ### [Assertions](./anotacionesJUnit.md)
 5. ### [Assumptions](./assumptions.md)
+6. ### [Parametrized Test](./parametrizedTest.mddependencyInjection.md)

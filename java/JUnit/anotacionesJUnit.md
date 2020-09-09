@@ -16,6 +16,7 @@ Anotación | Funcionalidad
  @Tag | declara tags para filtrar test
  @Disabled | inhabilita test o clases de test, dependiendo de si lo escribimos en el método o la clase
  @ExtendedWith | permite registrar extensiones
+ @RepeatedTest | permite repetir un test un número determinado de veces.
 
 La forma de indicar a **maven** la versión de JUnit con la que se está trabajando es mediante el tag <junit-platform.version> dentro del bloque <properties>.
 

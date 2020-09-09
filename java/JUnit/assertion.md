@@ -4,8 +4,8 @@ En primer lugar, explicar que la traducción formal de assert es afirmar. Es dec
 
 Precisamente por este motivo, porque son sentencias en las que se quiere obtener una aproximación al lenguaje natural, existen varias librerías que proporcionan funciones assert, cuyo objetivo es el mismo, pero las funciones utilizan diferente aproximación al lenguaje natural, además de proporcionar assetions específicas, por ejemplo para json. Algunos ejemplos son:
     * java Assert
-    * Hamcrest
-    * AssertJ
+    * Hamcrest: Actualmente su interés reside fundamentalmente en que es una librería que fue ampliamente utilizada, y puede ser frecuente encontrarla en el mantenimiento de algunos sitemas, pero no ha sido actualizada desde el 2015.
+    * AssertJ: proporciona sentencias assert más descriptivas que el api java.
     * Truth
 
  En [arquitecturajava](https://www.arquitecturajava.com/java-assert-librerias-y-enfoques/) profundizan algo más sobre el tema
