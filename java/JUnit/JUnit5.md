@@ -15,7 +15,7 @@ Los módulos principales son:
 
 Los test JUnit se pueden ejecutar por linea de comandos de dos formas:
 
-* ./mvnw clean test --> ejecuta el wrapper maven incluido en el proyecto, generado por el IDE  
+* ./mvnw clean test --> (mvnw.cmd para windows) ejecuta el wrapper maven incluido en el proyecto, generado por el IDE. Es una herramienta útil, si hay que ejecutar algún comando maven en un entorno en el que no esté instalado, o si hay instalada una versión distinta y queremos reproducir un comportamiento.  
 * mvn clean test --> ejecuta maven desde el entorno.
 
 Algunas de las nuevas características añadidas en JUnit5 son:
@@ -29,3 +29,4 @@ Per su potencia está en agrupar un conjunto de test bajo una misma característ
   * @TestInstance es una anotación relacionada, que permite declarar el método por defecto sin hacerlo estático.
   
   Estas últimas características son bastante importantes porque permiten ampliar las buenas prácticas de desarrollo a los test, de forma que se pueda abstraer comportamiento común, de forma que no repitamos código.
+* Herencia mediante la anotación: @ExtendWith(TimingExtension.class)
