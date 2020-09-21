@@ -37,4 +37,38 @@ Además de ésta, hay que tener en cuenta otras características:
   * @Category (nombreClase.class)
 
 Por último, las reglas JUnit4 no se soportan de forma nativa en JUnit5, así que hay que tener mucho cuidado con ellas, porque pueden generar problemas al migrar entre versiones.
+
+## Actualización de dependencias JUnit5
+
+Además de las [dependencias JUnit5](../JUnit/JUnit5.md), es necesario incluir:
+
+```xml
+<dependency>
+  <groupId>org.junit.vintage</groupId>
+  <artifactId>junit-vintage-engine</artifactId>
+  <version>${versión definida en bloque properties}</version>
+</dependency>
+```
+
+## Migración JUnit4 a JUnit5
+
+Se pueden seguir los siguientes pasos de forma ordenada para convertir los test JUnit4 a JUnit5:
+
+* Transformación de anotaciones. Cambiar las anotaciones JUnit4 por sus equivalentes en JUnit5
+* Cambiar los imports de las anotaciones comunies para que apunten al paquete org.junit.jupiter.api
+* Eliminar las dependecias con JUnit4. Esta dependencia, si se trata de un proyecto springboot, estará en el artefacto spring-boot-starter-test. Para eliminarla, hay que hacer un exclusion de la dependencia, en el propio tag.
+
+```xml
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-test</artifactId>
+  <scope>test</scope>
+  <exclusions>
+    <exclusion>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </exclusion>
+  </exclusions>
+</dependency>
+```
   

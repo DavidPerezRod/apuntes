@@ -30,3 +30,55 @@ Per su potencia está en agrupar un conjunto de test bajo una misma característ
   
   Estas últimas características son bastante importantes porque permiten ampliar las buenas prácticas de desarrollo a los test, de forma que se pueda abstraer comportamiento común, de forma que no repitamos código.
 * Herencia mediante la anotación: @ExtendWith(TimingExtension.class)
+
+## Dependencias maven
+
+Entre las propiedades del proyecto, es conveniente declarar la versión de JUnit que vamos a utilizar, de forma que quede parametrizada para todas las dependencias que la necesiten:
+
+<junit-platform.version>5.5.2</junit-platform.version>
+
+En cuanto a las principales dependencias que harán falta encontramos:
+
+```xml
+<dependency>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter-api</artifactId>
+    <version>${junit-platform.version}</version>
+    <scope>test</scope>
+</dependency>
+
+<dependency>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter-params</artifactId>
+    <version>${junit-platform.version}</version>
+    <scope>test</scope>
+</dependency>
+
+<dependency>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter-engine</artifactId>
+    <version>${junit-platform.version}</version>
+    <scope>test</scope>
+</dependency>
+<dependency>
+    <groupId>org.assertj</groupId>
+    <artifactId>assertj-core</artifactId>
+    <version>3.17.2</version>
+    <scope>test</scope>
+</dependency>
+```
+
+Además de los anteriores, para que maven incluya la etapa test en su livecycle y generación de informes de ejecución, es necesario incluir la dependencia failsafe y surfire:
+
+```xml
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-surefire-plugin</artifactId>
+    <version>2.22.0</version>
+</plugin>
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-failsafe-plugin</artifactId>
+    <version>2.22.0</version>
+</plugin>
+```
