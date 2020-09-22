@@ -26,3 +26,35 @@ En cuanto a las anotaciones que se utilizan para cada una de estas funcionalidad
 |@Spy| crea un spy de un objeto|
 |@InjectMocks| injecta mocks o spies en la clase a probar
 |@Captor| Captura argumentos en el mock|
+
+## Mock
+
+Con mockito, tenemos la posibilidad de instanciar un mock, de forma inline (Tipo variable=mock(Tipo.class)) o bien por anotación. 
+
+En el caso de utilzar las anotaciones para inyectar mocks, es necesario declarar método de inicialización previo, para que mockito inicialice los test:
+
+```java
+@BeforeEach
+void setUp(){
+    MockitoAnnotations.initMocks(this);
+}
+
+@Mock
+Map<String, Object> mapMock;
+```
+
+Una forma de simplificar el código anterior, es utilizando a nivel de clase la anotación @ExtendsWith(MockitoExtension.class), que nos evita escribir la inicialización del framework a nivel de clase:
+
+```java
+@ExtendWith(MockitoExtension.class)
+public class JUnitExtensionTest {
+
+    @Mock
+    Map<String, Object> mapMock;
+
+    @Test
+    void testMock() {
+        mapMock.put("keyValue", "foo");
+    }
+}
+```
