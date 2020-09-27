@@ -1,0 +1,5 @@
+* [java-8-new-features-in-simple-way](https://www.udemy.com/course/java-8-new-features-in-simple-way)
+* [predefined functional interfaces](https://medium.com/swlh/predefined-functional-interfaces-java-8-series-part-2-d9abc92a025d)
+* [lambda paralel programing](https://www.arquitecturajava.com/expresiones-lambda-y-ejecucion-en-paralelo/)
+* [operador ::](https://www.geeksforgeeks.org/double-colon-operator-in-java/)
+* [streams](https://www.oracle.com/lad/technical-resources/articles/java/processing-streams-java-se8.html)
