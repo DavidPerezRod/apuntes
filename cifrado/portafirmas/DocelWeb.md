@@ -16,7 +16,7 @@
       * rechazada --> el firmante no desea firmar alguno de los documentos de la solicitud
       * anulada --> la aplicación de gestión notifica a la aplicación del portafirmas la anulación de la solicitud. Solo se puede llegar a ella desde el estado de pendiente.
   
-  ![estados](drawio_assets/estados.png)
+  ![estados](./../drawio_assets/estados.png)
 * Operaciones portafirmas:
   * comenzar solicitud
     * requiere un documento para firmar
