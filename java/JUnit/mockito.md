@@ -100,3 +100,127 @@ void testArgument() {
     verify(pojoRepository).findById(anyLong());
 }
 ```
+
+## Excepciones
+
+Para poder trabajar con el tratamiento de excepciones, mockito permite simular su lanzamiento mediante la sentencia: 
+
+```java
+doThrow(new RuntimeException("msg")).when(clase).metodo();
+```
+
+También se puede utilizar la sintaxis BDD de mockito para este comportamiento:
+
+```java
+given(clase.metodo).willThrow(new RuntimeException(("msg")));
+```
+
+Y todavía hay una tercera forma en la cual se puede escribir este comportamiento:
+
+```java
+willThrow(new RuntimeException("msg")).given(clase).metodo();
+```
+
+Por si sola, esta sentencia no verifica nada, hay que combinarla con JUnit5:
+
+```java
+ assertThrows(RuntimeException.class, ()->clase.metodo())
+```
+
+## Lambda expresión
+
+Mockito proporciona una sentencia para introducir expresiones lambda como argumentos a los métodos bajo test:
+
+```java
+given(repository.save(argThat((argument-> argument.getDescription().equals("expresion"))))).willReturn(expectedObject);
+```
+
+## Argument Captor
+
+Este recurso de mockito sirve para validar los argumentos con los que se invocan los métodos. 
+
+Hay varias formas de declararlo, quizás la más sencilla, sea mediante inyección de dependencias:
+
+```java
+//Declaración del atributo mediante inyección
+@Captor
+ArgumentCaptor<String> stringArgumentCaptor;
+
+
+//utilización del atributo para la captura de argumentos
+@Test
+void processFindFormWildcardStringAnnotation() {
+    //given
+    Owner owner= new Owner(1L, "Joe", "Buck");
+    List<Owner> ownerList= new ArrayList<Owner>();
+    given(ownerService.findAllByLastNameLike(stringArgumentCaptor.capture())).willReturn(ownerList);
+
+    //when
+    String viewName= controller.processFindForm(owner, bindingResult, null);
+
+    //then
+    assertThat("%Buck%").isEqualToIgnoringCase(stringArgumentCaptor.getValue());
+}
+```
+
+Aunque también se puede declarar como variable local cuando se necesite:
+
+```java
+@Test
+void processFindFormWildcardString() {
+    //given
+    Owner owner= new Owner(1L, "Joe", "Buck");
+    List<Owner> ownerList= new ArrayList<Owner>();
+    final ArgumentCaptor<String> captor= ArgumentCaptor.forClass(String.class);
+    given(ownerService.findAllByLastNameLike(captor.capture())).willReturn(ownerList);
+
+    //when
+    String viewName= controller.processFindForm(owner, bindingResult, null);
+
+    //then
+    assertThat("%Buck%").isEqualToIgnoringCase(captor.getValue());
+}
+```
+
+## Answers
+
+Es un mecanismo que se puede utilizar como alternativa a thenReturn o thenThrow cuando el método cuyo funcionamiento estamos comprobando, devuelve un resultado u otro en función de cálculos.
+
+Por ejemplo, se puede dejar configurado un procesamiento genérico ante una invocación con @BeforeEach
+
+```java
+given(ownerService.findAllByLastNameLike(stringArgumentCaptor.capture())).willAnswer(invocationOnMock -> {
+            List<Owner> owners = new ArrayList<>();
+            String name = invocationOnMock.getArgument(0);
+
+            if (name.equals("%Bock%")) {
+                owners.add((new Owner(1L, "Joe", "Bock")));
+                return owners;
+            }
+        });
+```
+
+## Verify order of interactions
+
+Para verificar el orden en el que se invocan varios métodos en un mock, se utiliza la utilidad inOrder de Mockito. Primero, se declara los mocks que van a ser utilizados dentro del método a probar, y después de la acción **_when_** se verifica el orden, los métodos y los parámetros con que fueron invocados.
+
+```java
+//aquí no importa el orden en el que se pasan los parámetros
+//no tienen por qué coincidir con el orden de invocación
+InOrder inOrder= Mockito.inOrder(model, ownerService);
+
+//la llamada a when puede o no incluir mocks, pero estos
+//si deben haber sido inyectados de alguna forma. Por anotaciones 
+//o por otro tipo de mecanismos
+//when
+String viewName= controller.whenAction(arguments);
+
+
+//aquí el orden si es importante. Los asserts se deben declarar en el 
+//orden en el que se produjeron las llamadas.
+//inorder asserts
+inOrder.verify(ownerService).findAllByLastNameLike(anyString());
+inOrder.verify(model).addAttribute(anyString(),anyList());
+
+```
+
