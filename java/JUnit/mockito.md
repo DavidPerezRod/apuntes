@@ -149,14 +149,7 @@ ArgumentCaptor<String> stringArgumentCaptor;
 
 //utilización del atributo para la captura de argumentos
 @Test
-void processFindFormWildcardStringAnnotation() {
-    //given
-    Owner owner= new Owner(1L, "Joe", "Buck");
-    List<Owner> ownerList= new ArrayList<Owner>();
-    given(ownerService.findAllByLastNameLike(stringArgumentCaptor.capture())).willReturn(ownerList);
-
-    //when
-    String viewName= controller.processFindForm(owner, bindingResult, null);
+void processFindFormWildcardStringAnnotaspecialtyRepositoryindForm(owner, bindingResult, null);
 
     //then
     assertThat("%Buck%").isEqualToIgnoringCase(stringArgumentCaptor.getValue());
@@ -221,6 +214,64 @@ String viewName= controller.whenAction(arguments);
 //inorder asserts
 inOrder.verify(ownerService).findAllByLastNameLike(anyString());
 inOrder.verify(model).addAttribute(anyString(),anyList());
-
 ```
 
+## Verifiy number of interactions
+Los métodos ofrecidos por mockito para verificar el número de interacciones son: 
+
+```java
+//verificar el número absoluto de interacciones
+inOrder.verify(model, times(1)).addAttribute(anyString(),anyList());
+
+//verificar que no se produce ninguna interacción
+verifyZeroInteractions(model);
+
+//verificar que no se producen más interacciones
+verifyNoMoreInteractions(model);
+```
+
+La dfierencia entre noMoreInteractions y ZeroInteractions, es que la primera verifica que a partir de ese punto no se producen más interacciones, mientras que la segunda verfica que no se produzcan interacciones en cualquier momento del método.
+
+
+## Mockito Timeout
+
+Esta utilidad proporcionada por mockito, sirve para verificar que una determinada funcionalidad se ejecuta dentro de un intervalo de tiempo. 
+
+El inconveniente de este tipo de utilidad, es que puede depender del entorno en el que se ejecuten los test, servidores, tecnologías de integración contínua, etc. 
+
+```java
+then(repository).should(timeout(100).times(2)).deleteById(1L);
+```
+
+### Mockito spies
+
+Esta técnica proporcionada por mockito, permite trabajar con los objetos reales, y solo se reemplazará alguno de sus comportamientos. Actúan como un wrapper en torno a la implementación real 
+
+La forma de declarar un objeto spy, es mediante la anotación @Spy
+
+```java
+@Spy
+MapService Service;
+
+@Test
+void loadPetWithVisit(){
+    //given
+    Map<String, Object> model= new HashMap<>();
+    Pet pet= new Pet(1L);
+    petService.save(pet);
+
+    //aquí le decimos que invoque al método real, en lugar
+    //de simularlo
+    given(petService.findById(anyLong())).willCallRealMethod();
+
+    //when
+    Visit visit = visitController.loadPetWithVisit(1L, model);
+
+    //then
+    assertThat(visit).isNotNull();
+    assertThat(visit.getPet()).isNotNull();
+    assertThat(visit.getPet().getId()).isEqualTo(1l);
+}
+```
+
+Pero además el spy, también puede simular la llamada al método, con el método habitual willReturn, en lugar de willCallRealMethod.
