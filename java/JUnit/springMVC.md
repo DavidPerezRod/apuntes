@@ -39,8 +39,17 @@ class VetControllerTest {
 
     @Mock
     Map<String, Object> model;
-
-    MockMvc mockMvc;
+    @Test
+    void testNewOwnerPostNotValid() throws Exception {
+        mockMvc.perform(post("/owners/new")
+                .param("firstName", "Jimmy")
+                .param("lastName", "Buffett")
+                .param("city", "Key West"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeHasErrors("owner"))
+                .andExpect(model().attributeHasFieldErrors("owner", "telephone"))
+                .andExpect(model().attributeHasFieldErrors("owner", "address"));
+    }
 
     @InjectMocks
     VetController controller;
@@ -128,3 +137,22 @@ void tearDown(){
     reset(clinicService);
 }
 ```
+
+Otra de las características que propociona MockMvc de Spring es la de validar los atributos de entrada, salida, status de la respuesta, redirección, modelo, o vista:
+
+```java
+@Test
+void testNewOwnerPostNotValid() throws Exception {
+    mockMvc.perform(post("/owners/new")
+            .param("firstName", "Jimmy")
+            .param("lastName", "Buffett")
+            .param("city", "Key West"))
+            .andExpect(status().isOk())
+            .andExpect(model().attributeHasErrors("owner"))
+            .andExpect(model().attributeHasFieldErrors("owner", "telephone"))
+            .andExpect(model().attributeHasFieldErrors("owner", "address"))
+            .andExpect(view().name("owners/createOrUpdateOwnerForm"));
+}
+``'
+
+En el ejemplo, tanto el teléfono como la dirección forman parte del formulario, pero no se han añadido como parámetro post, y se comprueba su ausencia.
