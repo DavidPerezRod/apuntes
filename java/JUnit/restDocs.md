@@ -33,5 +33,44 @@ En cuanto a los snippets generados, contendrán información de:
 * request-body
 * response-body
 
-En cuanto al proceso de configuración, puede hacerse tanto con gradle como con maven.
+En cuanto al proceso de configuración, puede hacerse tanto con gradle como con maven. En el caso de maven, la dependencia que debemos incluir es:
 
+```xml
+<dependency>
+    <groupId>org.springframework.restdocs</groupId>
+    <artifactId>spring-restdocs-mockmvc</artifactId>
+    <scope>test</scope>
+</dependency>
+
+<!--la versión debe cogerla del pom parent de springframwork->
+```
+
+Pero además de ésta, también se debe añadir la dependencia con AsciiDoctor a nivel de compilación:
+
+```xml
+<plugin>
+    <groupId>org.asciidoctor</groupId>
+    <artifactId>asciidoctor-maven-plugin</artifactId>
+    <version>1.5.3</version>
+    <executions>
+        <execution>
+            <id>generate-docs</id>
+            <phase>prepare-package</phase>
+            <goals>
+                <goal>process-asciidoc</goal>
+            </goals>
+            <configuration>
+                <backend>html</backend>
+                <doctype>book</doctype>
+            </configuration>
+        </execution>
+    </executions>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.restdocs</groupId>
+            <artifactId>spring-restdocs-asciidoctor</artifactId>
+            <version>${spring-restdocs.version}</version>
+        </dependency>
+    </dependencies>
+</plugin>
+```
