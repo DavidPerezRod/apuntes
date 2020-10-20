@@ -4,4 +4,9 @@
 
 * [Test double](https://danielme.com/2017/07/24/tutorial-test-doubles-mockito/)
 
+* https://programar.cloud/post/como-documentar-un-microservicio-con-spring-rest-docs/
+
+* https://ictblog.luisalbertogh.net/?p=501
+
+
  
