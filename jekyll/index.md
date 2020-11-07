@@ -1,4 +1,4 @@
 # INDEX
 
-1. [Comandos](../jekyll/comandos.md)
-2. [Funcionamiento](../jekyll/funcionamiento.md)
+1. [Instalación](../jekyll/instalacion.md)
+2. [Reutilización](../jekyll/reutilizacion.md)
