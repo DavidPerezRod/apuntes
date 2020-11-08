@@ -7,6 +7,3 @@
 * https://programar.cloud/post/como-documentar-un-microservicio-con-spring-rest-docs/
 
 * https://ictblog.luisalbertogh.net/?p=501
-
-
- 
