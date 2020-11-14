@@ -29,4 +29,35 @@ El motivo por el que surgen este tipo de BBDD es porque la naturaleza del dato, 
 
 En general, las BBDD relacionales funcionan bien frente a un tipo de escalado vertical, pero no frente a uno horizontal. Y es éste último el que mejor se adapta a este tipo de características.
 
-Las nuevas BBDD que surgen para solucionar este tipo de problema, se agrupan bajo el nombre NoSQL, que habría que traducir como "no solo SQL".
+Las nuevas BBDD que surgen para solucionar este tipo de problema, se agrupan bajo el nombre NoSQL, que habría que traducir como "no solo SQL". 
+
+Es dentro de este contexto, donde MongoDB pretende establecer un compromiso entre funcioalidad, rendimiento y escalado:
+
+![fallo al cargar la imagen](funcionalidad-rendimiento-escalado.png)
+
+Aunque presenta un poco menos de rendimiento o escalado, ganamos en funcionalidad. Aumenta el rendimiento a costa de perder la capacidad de hacer joins y transacciones como las BBDD relacionales.
+
+Sin embargo, este inconveniente se solventa de forma relativa. ES cierto que no se pueden hacer joins, pero también lo es que toda la información necesaria para un documento, debería guardarse con él. Por otro lado, y aunque no hay transacciones, si aporta operaciones atómicas para los documentos, es decir que si se van a hacer modificaciones en un documento, éstas ser harán para todos los campos, o para ninguno.
+
+## Teorema CAP
+
+El teorema CAP, también llamado conjetura de Brewer, trata de clasificar los sistemas distribuidos, no solo las BBDD.
+
+Intenta medir el grado de cumplimiento de 3 variables:
+
+* **(C) consistencia**. El sistema deve devolver la misma información ante peticiones simultáneas del mismo dato.
+* **(A) disponibilidad**. El sistema debe contestar a todas las peticiones que reciba
+* **(P) tolerancia a la partición**. En un sistema distribuido, que pueden estar separados geográficamente, puede haber fallos de comunicación. Particiones en el sistema
+
+Lo que dice el teorema es que un sistema distribuido, solo puede proporcionar dos de estas variables al mismo tiempo.
+
+MongoDB en su sistema de funcionamiento por defecto es CP, proporciona consistencia y tolerancia a la partición. en grado máximo. Sí proporciona disponibilidad, pero lo hace en un grado inferior a las otras dos.
+
+A continuación se muestra una pequeña clasificación de las principales BBDD del mercado según el teorema CAP
+
+![imagen no disponible](trainagle.jpeg)
+
+El motivo por el que Mongo ofrece consistencia, es porque en su arquitectura básica, el servidor primario siempre es responsable del acceso a las operaciones de escritura y lectura, de forma que hasta que no haya terminado con la escritura, siempre va a mostrar la lectura anterior.
+
+Solo en caso de que se cambie la configuración para admitir lecturas de los servidores secundarios, se perdería consistencia. En este caso, se proporcionaría una consistencia eventual, y su clasificación sería más bien AP, porque se sacrificaría consistencia por disponibilidad.
+

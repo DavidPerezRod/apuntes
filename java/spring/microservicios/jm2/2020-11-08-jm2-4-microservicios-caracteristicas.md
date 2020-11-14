@@ -34,6 +34,17 @@ Sin embargo, no todo son beneficios. El desarrollo de arquitecturas basadas en m
 
 Un punto clave y polémico, es cuál debe ser el tamaño de un microservicio. Y esto es porque su tamñano podría ir desde lo necesario para resolver un único end-point, a una funcionalidad mucho más amplia. Lo cierto es que no hay ningún criterio definitivo, y quizás lo que tiene más sentido, es que el tamaño varíe dependiendo del caso de uso del escenario en el que nos encontremos. Del mismo modo que a simple vista un único end-point puede parecer poca funcionalidad para considerarlo un microservicio, si a éste le añadimos un requisito de millones de accesos, por cuestiones de escalabilidad, sí puede tener servicio aislarlo en un único microservicio.
 
-Los motivos que pueden llevarnos a adoptar microservicios puede ser:
+## Refactorización
 
-* la descomposición de una aplicación monolítica
+Uno de los escenarios desde el que se puede partir, es la refactorización de una aplicación monolítica. Aunque es difícil dar una receta estricta sobre los pasos que se deben seguir, si se pueden dar una serie de recomendaciones a grandes rasgos:
+
+* descomponar por áreas funcionales
+* por dominio de objetos
+* por verbos de acción
+* por nombres de entidades, identificando las áreas funcionales con las entidades
+
+Además de estas técnicas, más centradas en descomponer en base a similitudes entre elementos del microservicio, también es conveniente prestar atención a otros criterios como el principio de responsabilidad única. Aunque originalmente aplicado al diseño de clases y componentes, si lo aplicásemos a microservicios, implicaría::
+
+* solo debe existir un motivo (agente) por el que el microservicio deba cambiar
+
+Del 
