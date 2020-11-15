@@ -47,14 +47,26 @@ Si además nos queremos conectar a una BBDD concreta:
 
 * localhost:2707/nombre_BBDD
 
+Y si le queremos cargar datos de entrada:
+
+* localhost:2707/nombre_BBDD --shell archivo.js
+
 Otros comandos de utilidad:
 
 |COMANDO|DESCRIPCIÓN|
 |-------|-----------|
+|help|indica todos los comandos que se pueden ejecutar en la shell|
+|db.nombre_coleccion.help()|indica las opciones que se pueden ejecutar en la colección|
 |db|muestra la BBDD a la que estamos conectados|
 |show dbs|muestra las BBDD disponibles en el servidor|
 |show collections|muestra las colecciones disponibles en la BBDD|
-
+|show dbs|muestra las BBDD que tenemos|
+|show collections| muestra las collecciones que tenemos|
+|use nombre_BBDD|cambia a la BBDD que indicamos|
+|db.nombre_colecction.count()|devuelve el número de documentos en la colección|
+|db.nombre_colecction.finOne()|devuelve la estructura de documentos de la colección|
+|help|indica todos los comandos que se pueden ejecutar en la shell|
+|load(nombre_archivo.js)|carga el contenido del archivo en la BBDD en al que nos encontremos. En estos archivos, además de datos se pueden ejecutar scripts enteros, con [comandos equivalentes a los de la shell](https://docs.mongodb.com/v2.4/core/server-side-javascript/|
 
 Características de la consola MongoDB:
 
