@@ -63,3 +63,7 @@ Su nombre en inglés es "capped collections". Se llaman así porque tienen un ta
   * se pueden actualizar si el documento no cambia de tamañano, si no, no.
   * no se pueden particionar.
   * si las nuevas inserciones superan el espacio reservado para la colección, entonces Mongo borra los documentos más antiguos e inserta el nuevo en parte de su espacio (el que ocupe), y así sucesivamente, es como una especie de cola circular.
+
+## GridFS
+
+Cuando un documento es mayor a 16 MB, el lugar de BSON, la estructura de almacenamiento es GridFS, que implica fragmentos de 246 KB.
