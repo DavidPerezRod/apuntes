@@ -1,7 +1,9 @@
 # Creación de una imagen Docker
 
+Los pasos que se deben seguir si se quiere crear una imagen docker son:
+
 1. crear un fichero Dockerfile
-2. en su interior instalar un sistma operativo. Por ejemplo
+2. en su interior instalar un sistma operativo. Por ejemplo:
 
 ```dockerfile
 #creamos una imagen a partir de esta versión de ubuntu.
@@ -25,7 +27,7 @@ Después para crear la imagen a partir de este contenido hay que ejecutar:
 docker build rutafichero
 ```
 
-Cada imagen creada va a tener unos metadatos, como fecha de creadción y comando para correr el contenedor.
+Cada imagen creada va a tener unos metadatos, como fecha de creación y comando para correr el contenedor.
 
 Para saber las imágenes que tenemos, se ejecuta el comando:
 
@@ -33,7 +35,7 @@ Para saber las imágenes que tenemos, se ejecuta el comando:
 docker images
 ```
 
-Después de ejecutar el fichero Dockerfile anterior, al ejecutarlo tendremos dos imágenes, la de ubuntu que hemos descargado de dockerhub, y la que hemos creado nosotros con la de ubuntu y nginx.
+Después de ejecutar el fichero Dockerfile anterior tendremos dos imágenes, la de ubuntu que hemos descargado de dockerhub, y la que hemos creado nosotros con la de ubuntu y nginx.
 
 En el fichero de creación no hemos indicado ni su nombre ni su tag, de forma que al listar las imágenes estos dos elementos aparecerán como **_none_**
 

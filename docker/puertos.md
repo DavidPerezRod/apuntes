@@ -88,4 +88,5 @@ CMD nginx -g 'daemon off;'
 
 Docker de esta forma, ya sabe que la imagen tiene un puerto, y lo puede publicar al crear el contenedor, si se utiliza la opción -P. La diferencia es que el puerto que se publicará, será asignado por docker al arrancar.
 
-El rango de puertos que va a utilizar docker en un sistema linux, será el definido en el fichero /pro/sys/net/ipv4/ip_local_port_range
+El rango de puertos que va a utilizar docker en un sistema linux, será el definido en el fichero /pro/sys/net/ipv4/ip_local_port_range.
+

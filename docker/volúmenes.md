@@ -18,9 +18,9 @@ Si una vez dentro, se ejecuta:
 tail -f /var/log/nginx/access.log
 ```
 
- Se podrá ver toda la actividad que se hace sobre el contenedor. Sin embargo hay que tener en cuenta que **cualquier cambio que se haga en el sistema del contenedor no se va a persistir en la imagen a partir de las cuales fue crado, de forma que si se borra y se vuele a crear, los cambios se perderán.** Se trata pues de infraestructura inmutable.
+ Se podrá ver toda la actividad que se hace sobre el contenedor. Sin embargo hay que tener en cuenta que **cualquier cambio que se haga en el sistema del contenedor no va a persistir en las imágenes utilizadas para su creación, de forma que si se borra y se vuele a crear, los cambios se perderán.** Se trata pues de infraestructura, que por defecto es inmutable.
 
-Pero sin embargo para algún tipo de infrastructura es necesario la existencia de contenedores persistentes. El comando:
+No obstante para algún tipo de infrastructura es necesario la existencia de contenedores persistentes. El comando:
 
 ```sh
 docker volume
@@ -49,5 +49,27 @@ Exiten tres tipos de almacenamiento en docker:
 ![tipos de volúmenes docker](./imagenes/types-of-mounts-volume.png)
 
 * **_volumes_**: los datos se almacenan dentro del sistema de ficheros del host. Es el mecanismo preferido para persistir los datos, y  **solo Docker tiene permisos sobre esta ubicación**. Un volumen puede ser montado por diferentes contenedores a la vez.
-* **_bind mounts_**: Se utiliza para mapear cualquier sitio del sistema de ficheros dentro de tu contenedor. A diferencia de los volúmenes, a través de este mecanismo es posible acceder a la ruta mapeada y modificar los ficheros.
-* **_tmpfs_**: Se trata de un almacenamiento temporal en memoria. Se suele utilizar para el almacenamiento de configuraciones y espacios efímeros que desparecerán cada vez que el contenedor se pare.
+* **_bind mounts_**: Se utiliza para mapear cualquier sitio del sistema de ficheros dentro del contenedor. A diferencia de los volúmenes, este mecanismo permite acceder a la ruta mapeada y modificar los ficheros.
+* **_tmpfs_**: Almacenamiento temporal en memoria, en general útil para el almacenamiento de configuraciones y datos que desparecerán cada vez que el contenedor se pare.
+
+Los volúmente son importantes, porque pueden ser asignados a los contenedores en el momento de monarlos, esto se pued hacer con:
+
+```sh
+docker create -P --mount source=NOMBRE_VOLUMEN, target=target/var/www/html --name NOMBRE_CONTENEDOR IMAGEN_ID:TAG
+```
+
+Todo esto es importante, porque al utilizar este mecanismo se pueden editar los ficheros que utiliza el contendor desde el propio host, sin necesidad de acceder a éste, y porque si se borra el contenedor, los que éste utiliza, siguen existiendo en el host. Así se puede ir evolucionando en cuanto a imágenes (por ejemplo evolucionar la versión de BBDD y seguir utilizando los mismos datos), aumentar sus tags, y seguir utilizando los mismos datos.
+
+Los volúmenes al igual que los contenedores y las imágenes se pueden eliminar con rm:
+
+```sh
+docker volume rm NOMBRE_VOLUMEN
+```
+
+Otro comando es prune:
+
+```sh
+docker volume rm prune
+```
+
+Que permite borrar volúmenes de forma masiva.

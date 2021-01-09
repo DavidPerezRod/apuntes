@@ -27,7 +27,7 @@ La programación reactiva es una nueva especificación en el API Java, denominad
 
 Ejemplo de arquitectura reactiva:
 
-![diagrama](arquitectura.png)
+![diagrama](imagenes/arquitectura.png)
 
 Teniendo en cuenta lo anterios, se puede decir que la programación reactiva debe asegurar:
 
