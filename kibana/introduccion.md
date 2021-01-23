@@ -25,7 +25,7 @@ La forma de instalación, estructura básica y puesta en marcha es la misma para
 
 ## Logstash
 
-Logstash es una herramienta para la administración de logs. Esta herramienta se puede utilizar para recolectar, analizar (parsing) y guardar los logs para futuras búsquedas.2​ La aplicación se encuentra basada en jRuby y requiere de Java Virtual Machine para ejecutarse. Como se ejecuta mediante JVM puede ser ejecutada en cualquier Sistema Operativo que ejecute JVM
+Logstash es una herramienta para la administración de logs. Esta herramienta se puede utilizar para recolectar, analizar (parsing) y guardar los logs para futuras búsquedas.2​ La aplicación está basada en jRuby y requiere de JVM para ejecutarse.
 
 Logstash soporta un número de entradas, códecs, filtros y salidas. Las entradas son las fuentes de datos. Los códecs esencialmente convierten un formato de entrada en un formato aceptado por Logstash, así como también transforman del formato de Logstash al formato deseado de salida. Estos son utilizados comúnmente si la fuente de datos no es una línea de texto plano. Los filtros son acciones que se utilizan para procesar en los eventos y permiten modificarlos o eliminar eventos luego de ser procesados. Finalmente, las salidas son los destinos donde los datos procesados deben ser derivados
 
