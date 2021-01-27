@@ -49,3 +49,4 @@ Por medio del comando ./packetbeat devices, podremos conocer todas las interface
 ## FileBeat
 
 Se trata de un proceso ligero par la centralización y distribución de logs. Se instala como agente en los servidores, y se le indica los ficheros de logs o ubicaciones de las que debe recolectarlos, y enviarlos a elasticsearch o logstash para su indexación. Se divide en dos etapas fundamentales, la de recolección, se activa uno por cada fichero de log. Y el de agregación de la informacíon, como paso previo al envío a su destino final.
+
