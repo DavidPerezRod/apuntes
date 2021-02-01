@@ -167,3 +167,255 @@ Actualmente se trata prácticamente del estandar para trabajar con logstash. En 
 * host -> hosts desde los que se van a procesar peticiones. Por defecto 0.0.0.0 permite recibir desde cualquier host.
 
 También se pueden añadir configuraciones más específicas de conexión SSL y cifrado.
+
+## Filtros
+
+### Grok
+
+#### Parseo
+
+La idea es fragmentar las líneas mensaje de entrada en las secciones conlas que querremos trabajar posteriormente. Es probablemente la herramienta que más recursos requiere, así que lo ideal es que los logs lleguen en json para evitar hacer transformaciones.
+
+Para empezar a trabajar en el filtro, se debe añadir la sección filter al fichero de configuración, y es en esa sección en la que se declara grok como filtro:
+
+```yml
+input {
+  beats {
+    port => 5044
+    codec => multiline {
+      pattern => ""
+    }
+  }
+}
+
+filter{
+  grok{
+
+  } 
+}
+
+output {
+  elasticsearch {
+    hosts => ["http://elasticsearch:9200"]
+    user => "elastic"
+    password => "changeme"
+    index => "%{[@metadata][beat]}-%{[@metadata][version]}"
+  }
+}
+```
+
+A partir de aquí, hay que indicarle varias cosas:
+
+* match: es la propiedad que sirve para indicarle la expresión que debe encontrar. Además hay que tener en cuenta que cuando se trabaja con beats, éste envía el contenido del mensaje en el campo message. Así pues se declara el tipo de filtro, y la expresión match, compuesta por campo y expresión en formato json.
+
+Para facilitar el trabajo de filtrado con grok, kibana entre sus herramientas de la sección "Dev Tools" tiene un debugger de grok. También hay otras herramientas en red como grokdebug que incluye alguna otra utilidad porque aporta sugerencias de patrones genéricos.
+
+Sin embargo, este tipo de patrones no son de uso obligatorio, ya que se pueden utilizar expresiones regulares genéricas
+
+##### Patrones Grok
+
+La sintaxis de un patrón grok es %{PATTERN: key} donde pattern es la expresión regular y key es el nombre que le vamos a dar al campo en la salida
+
+```yml
+input {
+  beats {
+    port => 5044
+  }
+}
+
+filter{
+  grok{
+    match => {"message" => "%{WORD:level} %{TIMESTAMP_ISO8601:date} \[%{WORD:thread}\] %{JAVACLASS:class} - %{WORD:type}\|%{NUMBER:status}\|%{USERNAME:user}\|%{IP:origin}"}
+  } 
+}
+
+output {
+  elasticsearch {
+    hosts => ["http://elasticsearch:9200"]
+    user => "elastic"
+    password => "changeme"
+    index => "%{[@metadata][beat]}-%{[@metadata][version]}"
+  }
+}
+```
+
+El patrón anterior sirve para separar trazas de log del tipo:
+
+INFO 2021-01-30 16:49:19 [main] a.b.t.loggenerator.LogGenerator - LOGIN|250|Zipi|236.240.241.84
+
+Sin embargo, rara vez servirá indicar un único patrón para el filtrado, ya que por ejemplo, son el patrón anterior, si tuviésemos un otra traza de log del tipo INFO 2021-01-30 16:49:28 [main] a.b.t.loggenerator.LogGenerator - PERFORMANCE|0.027|SEND EMAIL|FAILURE|Pantuflo, no nos serviría, necesitaríamos una expresión regular del tipo: %{WORD:level} %{TIMESTAMP_ISO8601:date} \[%{WORD:thread}\] %{JAVACLASS:class} - %{WORD:type}\|%{NUMBER:duration}\|%{DATA:action}\|%{WORD:status}\|%{USERNAME:user}. 
+
+La forma de declarar un array de expresiones es la siguiente:
+
+```yml
+input {
+  beats {
+    port => 5044
+  }
+}
+
+filter{
+  grok{
+    match => {"message" => [
+      "%{WORD:level} %{TIMESTAMP_ISO8601:date} \[%{WORD:thread}\] %{JAVACLASS:class} - %{WORD:type}\|%{NUMBER:status}\|%{USERNAME:user}\|%{IP:origin}", 
+      "%{WORD:level} %{TIMESTAMP_ISO8601:date} \[%{WORD:thread}\] %{JAVACLASS:class} - %{WORD:type}\|%{NUMBER:duration}\|%{DATA:action}\|%{WORD:status}\|%{USERNAME:user}"
+      ]
+    }
+  } 
+}
+
+output {
+  elasticsearch {
+    hosts => ["http://elasticsearch:9200"]
+    user => "elastic"
+    password => "changeme"
+    index => "%{[@metadata][beat]}-%{[@metadata][version]}"
+  }
+}
+```
+
+Una característica de Grok que se debe tener en cuenta, es que por defecto no identifica como una única línea de log, aquellas que presentan saltos de línea. Este aspecto es importante tenerlo en cuenta cuando se quieren procesar excepciones. Para indicarle este hecho, antes del patrón hay que indicárselo mediante (?m). De forma que se tendría algo similar a:
+
+```yml
+input {
+  beats {
+    port => 5044
+  }
+}
+
+filter{
+  grok{
+    match => {"message" => [
+      "%{WORD:level} %{TIMESTAMP_ISO8601:date} \[%{WORD:thread}\] %{JAVACLASS:class} - %{WORD:type}\|%{NUMBER:status}\|%{USERNAME:user}\|%{IP:origin}", 
+      "(?m)%{WORD:level} %{TIMESTAMP_ISO8601:date} \[%{WORD:thread}\] %{JAVACLASS:class} - %{WORD:type}\|%{NUMBER:duration}\|%{DATA:action}\|%{WORD:status}\|%{USERNAME:user}"
+      ]
+    }
+  } 
+}
+
+output {
+  elasticsearch {
+    hosts => ["http://elasticsearch:9200"]
+    user => "elastic"
+    password => "changeme"
+    index => "%{[@metadata][beat]}-%{[@metadata][version]}"
+  }
+}
+```
+
+Aunque el patrón indicado no serviría para identificar logs de excepciones, se ha utilizado de ejemplo para mostrar el aspecto que tendría.
+
+En caso de definir un patrón que no aplicase a nada, durante el procesamiento se producirán errores de tipo "Grok parese failure"
+
+##### Expresiones regulares
+
+Logstash permite mezclar los dos tipos de expresiones, tanto las expresiones regulares como las expresiones Grok en un solo patrón. Sin embargo, la forma en que se expresan es distinta. 
+
+Las expresiones reguarles dse expresan entre paréntesis, cambiando el orden, en lugar de expresión-nombre es nombre-expresión:
+
+(?<nombre_campo>expresion_regular)
+
+```yml
+input {
+  beats {
+    port => 5044
+  }
+}
+
+filter{
+  grok{
+    match => {"message" => [
+      "%{WORD:level} %{TIMESTAMP_ISO8601:date} \[%{WORD:thread}\] %{JAVACLASS:class} - %{WORD:type}\|%{NUMBER:status}\|%{USERNAME:user}\|%{IP:origin}", 
+      "(?m)%{WORD:level} %{TIMESTAMP_ISO8601:date} \[%{WORD:thread}\] %{JAVACLASS:class} - %{WORD:type}\|%{NUMBER:duration}\|%{DATA:action}\|%{WORD:status}\|%{?<resto>.*}"
+      ]
+    }
+  } 
+}
+
+output {
+  elasticsearch {
+    hosts => ["http://elasticsearch:9200"]
+    user => "elastic"
+    password => "changeme"
+    index => "%{[@metadata][beat]}-%{[@metadata][version]}"
+  }
+}
+```
+
+Sin embargo, por motivos de claridad, es conveniente utilizar los patrones predefinidos Grok, y utilizar las expresiones regulares únicamente para personalizar alguna expresión para la que no exista el equivalente Grok.
+
+Aunque aún en este caso, tampoco se suele trabajar de esta forma, lo que se hace es declarar un nuevo patrón Grok para poder reutilizarlo en otras expresiones. La forma de declarar un patrón en un fichero de configuración es la siguiente:
+
+```yml
+input {
+  beats {
+    port => 5044
+  }
+}
+
+filter{
+  grok{
+    pattern_dir => "patterns_directory"
+    match => {"message" => [
+      "%{WORD:level} %{TIMESTAMP_ISO8601:date} \[%{WORD:thread}\] %{JAVACLASS:class} - %{WORD:type}\|%{NUMBER:status}\|%{USERNAME:user}\|%{IP:origin}", 
+      "(?m)%{WORD:level} %{TIMESTAMP_ISO8601:date} \[%{WORD:thread}\] %{JAVACLASS:class} - %{WORD:type}\|%{NUMBER:duration}\|%{DATA:action}\|%{WORD:status}\|%{?<resto>.*}"
+      ]
+    }
+  } 
+}
+
+output {
+  elasticsearch {
+    hosts => ["http://elasticsearch:9200"]
+    user => "elastic"
+    password => "changeme"
+    index => "%{[@metadata][beat]}-%{[@metadata][version]}"
+  }
+}
+```
+
+En el directorio de patrones, declararíamos un fichero de texto con el patrón. Un patrón por línea con la estructura:
+
+NOMBRE_PATRON EXPRESIÓN
+
+Por ejemplo:
+
+COMMON_LOG %{WORD:level} %{TIMESTAMP_ISO8601:date} \[%{WORD:thread}\] %{JAVACLASS:class} - %{WORD:type}\|%{NUMBER:status}\|%{USERNAME:user}\|%{IP:origin}"
+
+Pueden exisiter de uno a n ficheros con uno a n patrones.
+
+La forma de incluir un patrón declarado en un fichero, como parte de la expresión regular, quedaría:
+
+```yml
+input {
+  beats {
+    port => 5044
+  }
+}
+
+filter{
+  grok{
+    patterns_dir => "patterns_directory"
+    match => {"message" => [
+      "%{COMMON_LOG} - %{WORD:type}\|%{NUMBER:status}\|%{USERNAME:user}\|%{IP:origin}", 
+      "%{COMMON_LOG} - %{WORD:type}\|%{NUMBER:duration}\|%{DATA:action}\|%{WORD:status}\|%{?<resto>.*}"
+      ]
+    }
+  } 
+}
+
+output {
+  elasticsearch {
+    hosts => ["http://elasticsearch:9200"]
+    user => "elastic"
+    password => "changeme"
+    index => "%{[@metadata][beat]}-%{[@metadata][version]}"
+  }
+}
+```
+
+De esta forma es más legible mantenible.
+
+### Mutate
+
+Permite hacer transformaciones los sobre los datos que recibe logstasth. 

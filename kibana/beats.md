@@ -22,7 +22,7 @@ Una vez cambiada la configuración se puede probar mediante: ./metricbeat test c
 
 ## PacketBeat
 
-Esta orientado a la monitorización en tiempo real del tráfico de red de nuestro servidor. Es útil para auditar la cominucación entre loshost de la red. Trabaja decodificando el protocolo de capa de aplicación (HTTP, MySQL, Redis, etc) correlacionando peticiones y respuestas, y registrando los campos más relevantes de las transacciones. La información la puede escribir directamente a elasticsearch o bien a una cola con Redis o Logstash. 
+Esta orientado a la monitorización en tiempo real del tráfico de red de nuestro servidor. Es útil para auditar la cominucación entre loshost de la red. Trabaja decodificando el protocolo de capa de aplicación (HTTP, MySQL, Redis, etc) correlacionando peticiones y respuestas, y registrando los campos más relevantes de las transacciones. La información la puede escribir directamente a elasticsearch o bien a una cola con Redis o Logstash.
 
 Los principales protocolos soportados son:
 
@@ -228,7 +228,7 @@ Además de la entrada de tipo log, filebeat admite otros tipos de entrada con su
 
 * Stdin
 * Redis
-* UDP 
+* UDP
 * Docker
 * TCP
 * Syslog.
