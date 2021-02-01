@@ -1,6 +1,8 @@
+[< indice](./0-index.md)
+
 # Inyección de dependencias
 
-Son varias las formas en las que se pueden establecer las dependecias en los test. Se puede hacer con JUnit4, JUnit5, Springframework, por medio de clases internas, o mediante componentScan de las clases de configuración de la aplicación.:
+Son varias las formas en las que se pueden establecer las dependecias en los test. Se puede hacer con JUnit4, JUnit5, Springframework, por medio de clases internas, o mediante componentScan de las clases de configuración de la aplicación.
 
 * JUnit4. En este caso no se pueden inyectar directamente dependencias, en su lugar lo aconsejable, es crear un método @Before, en el que se asigna el tipo con el que ser quiere trabajar:
 
