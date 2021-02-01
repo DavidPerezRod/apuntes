@@ -2,7 +2,7 @@
 
 * IGPF Integración general del portafirmas
 * Interfaz generica de portafirmas
-  * Definición de las operaciones que iba a soportar  * 
+  * Definición de las operaciones que iba a soportar
   * Implementada mediante servicios web
   * Procedimiento asíncrono basado en dos sistemas:
     * Sistema de gestión --> genera la solicitud de firma
@@ -31,7 +31,8 @@
   * codificados en base64
   * mtom
 
-## Docel Web
+## Docel Web - Estructura
+
 * Se conecta con otros sistemas de informática presupuestaria por mediao de IGPF
 * Está dividido en:
   * Bandeja de entrada (solicitudes)
@@ -40,24 +41,24 @@
 * firma de ficheros formato xades, mediante applets
 * gestión de firmas de documentos durante procedimientos de tramitación de la administración
 * portafirmas electronico arquitectura web
-    * accesible desde dispositivos con SO Android iOS.
-    * ¿firma trifásica en diferido?    
-    * applet extraligero SGIFE 
-    * MiniApplet @Firma Internet 8 o superior.
-    * autofirma -- chrome y firefox
+  * accesible desde dispositivos con SO Android iOS.
+  * ¿firma trifásica en diferido?
+  * applet extraligero SGIFE 
+  * MiniApplet @Firma Internet 8 o superior.
+  * autofirma -- chrome y firefox
 * Formatos de documentos admitidos:
-    * pdf
-    * xml
-    * txt
-    * xsig
-    * doc - docx
-    * zip
+  * pdf
+  * xml
+  * txt
+  * xsig
+  * doc - docx
+  * zip
 
 * permite tramitar solicitudes de firma de aplicaciones internas o externas
-    * Secretaría de estado de presupuestos y gastos    
-    * IGAE
-    * usuarios externos que requieran relacion con las administraciones
+  * Secretaría de estado de presupuestos y gastos
+  * IGAE
+  * usuarios externos que requieran relacion con las administraciones
 * App @Firma
-    * escritorio
-    * móvil (yo salí antes de que se pusiese en producción)
+  * escritorio
+  * móvil (yo salí antes de que se pusiese en producción)
 * Validae

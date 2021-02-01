@@ -1,9 +1,9 @@
 # CIFRADO ASIMÉTRICO - CIFRADO DE CLAVE PÚBLICA
 
 Se trata de un método de cifrado en el que se utilizan dos claves complementarias, de forma que todos los mensajes cifrados con una clave solo pueden ser descifrados con la otra y viceversa.
-La clave pública se comprtirá con muchos usuarios, y la clave privada se mantendrá confidencial. Además una clave, no puede cifrar y descifrar al mismo tiempo. 
+La clave pública se comprtirá con muchos usuarios, y la clave privada se mantendrá confidencial. Además una clave, no puede cifrar y descifrar al mismo tiempo.
 
-El algoritmo en el que se basa el sistema es: 
+El algoritmo en el que se basa el sistema es:
 
     1. Generar dos números primos muy grandes, p y q
     2. Hacer n=p*q
