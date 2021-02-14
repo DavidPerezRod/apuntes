@@ -13,7 +13,7 @@ Los medios por los cuales se puede asegurar la confianza entre las partes son tr
 
 * Criptografía de clave pública. Permite implementar sistemas de firma digital y cifrado sin necesidad de compartir secretos.
 * Firma electrónica. Mediante la Firma electrónica se garantiza la integridad, y mediante la criptografía se garantiza la confidencialidad de emisor y receptor.
-* Certificados electónicos. De forma Permite garantizar la Autenticidad del receptor del mensaje o del emisor del mismo, mediante la identidad de clave pública.
+* Certificados electónicos. Permiten garantizar la Autenticidad del receptor del mensaje o del emisor del mismo, mediante la identidad de clave pública.
 
 ## 2 - PKI (infraestructura de clave pública)
 
@@ -63,12 +63,12 @@ Consultar con la Autoridad de Registro (RA) para determinar si acepta o rehúsa 
 
 3. **_Autoridad de registro (RA)_**: Entidad encargada de verificar los datos de las personas que solicitan el certificado para posteriormente aprobarlos y exportarlos a la CA.
 
- Igualmente se encarga de: 
+ Igualmente se encarga de:
 
- * los procesos administrativos relacionados con los certificados
- * Indicar a la CA si debe emitir el certificado.
- * Autorizar la asociación entre una clave pública y el titular de un certificado
- * Gestionar el ciclo de vida de un certificado:
+* los procesos administrativos relacionados con los certificados
+* Indicar a la CA si debe emitir el certificado.
+* Autorizar la asociación entre una clave pública y el titular de un certificado
+* Gestionar el ciclo de vida de un certificado:
   * Revocación
   * Expiración
   * Renovación (extensión periodo validez del certificado, respetando el plan de claves)

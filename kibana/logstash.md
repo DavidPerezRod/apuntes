@@ -309,9 +309,9 @@ En caso de definir un patrón que no aplicase a nada, durante el procesamiento s
 
 ##### Expresiones regulares
 
-Logstash permite mezclar los dos tipos de expresiones, tanto las expresiones regulares como las expresiones Grok en un solo patrón. Sin embargo, la forma en que se expresan es distinta. 
+Logstash permite mezclar los dos tipos de expresiones, tanto las expresiones regulares como las expresiones Grok en un solo patrón. Sin embargo, la forma en que se expresan es distinta.
 
-Las expresiones reguarles dse expresan entre paréntesis, cambiando el orden, en lugar de expresión-nombre es nombre-expresión:
+Las expresiones reguarles se expresan entre paréntesis, cambiando el orden, en lugar de expresión-nombre es nombre-expresión:
 
 (?<nombre_campo>expresion_regular)
 
@@ -326,7 +326,7 @@ filter{
   grok{
     match => {"message" => [
       "%{WORD:level} %{TIMESTAMP_ISO8601:date} \[%{WORD:thread}\] %{JAVACLASS:class} - %{WORD:type}\|%{NUMBER:status}\|%{USERNAME:user}\|%{IP:origin}", 
-      "(?m)%{WORD:level} %{TIMESTAMP_ISO8601:date} \[%{WORD:thread}\] %{JAVACLASS:class} - %{WORD:type}\|%{NUMBER:duration}\|%{DATA:action}\|%{WORD:status}\|%{?<resto>.*}"
+      "(?m)%{WORD:level} %{TIMESTAMP_ISO8601:date} \[%{WORD:thread}\] %{JAVACLASS:class} - %{WORD:type}\|%{NUMBER:duration}\|%{DATA:action}\|%{WORD:status}\| (?<resto>.*)"
       ]
     }
   } 
@@ -943,7 +943,7 @@ xpack.monitoring.collection.pipeline.details.enabled: true
 
 Además del fichero logstash.yml donde se pueden configurar multitud de aspectos, existe otro fichero, startup.options en el que se pueden configurar otros aspectos del funcionamiento del proceso logstash, así como la máquina virtual. Encontramos aspectos tales como:
 
-* carpeta de arranqeu por defecto
+* carpeta de arranque por defecto
 * ubibación del fichero yaml
 * prioridad del proceso en el sistema operativo
 * número de ficheros permitidos

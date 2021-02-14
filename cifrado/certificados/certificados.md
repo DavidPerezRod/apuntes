@@ -18,6 +18,7 @@ Existen varios tipos de certificados:
 * **_Certificados de Administración pública_**. Identifican a un organismo público.
 
 De igual forma, por su funcionalidad pueden dividirse en:
+
 * certificados de firma
 * certificados de autenticación
 * certificados de cifrado.
