@@ -2,7 +2,7 @@
 
 En primer lugar, hay que entender los conceptos generales de las excepciones java:
 
-1. la jerarquía de excepciones java
+## Jerarquía de excepciones java
 
 ![excepciones](throwable.png)
 
@@ -11,14 +11,56 @@ En primer lugar, hay que entender los conceptos generales de las excepciones jav
 * java.lang.RuntimeException. Superclase de todas las excepciones normales que son excepciones sin marcar.
 * Java.lang.Error. Es la superclase de todas las excepciones de "error fatal". Situaciones en las que la JVM considera inseguro o imprudente que una aplicación intentara recuperarse del error. Son errores de los que no es posible recuperarse.
 
-2. Entender que no es recomendable declarar subtipos personalizados de de Throwable, ya que la mayoría de soluciones y librerías basadas en java consideran que Error y Exception son los únicos tipos que heredan de Exception.
+**No es recomendable declarar subtipos personalizados de de Throwable**, ya que la mayoría de soluciones y librerías basadas en java consideran que Error y Exception son los únicos tipos que heredan de Exception.
 
-http://www.juntadeandalucia.es/servicios/madeja/contenido/recurso/214 **--> en este artículo tambión hay información general sobre el tratamiento de log**
-https://www.linuxtopia.org/online_books/programming_books/thinking_in_java/TIJ311_020.htm
-https://medium.com/@michael_altmann/error-handling-returning-results-2b88b5ea11e9
-https://martinfowler.com/articles/replaceThrowWithNotification.html
-https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#validation-conversion
-https://kamer.dev/custom-javax-annotation-error-handling/ **--> Las validaciones de javax validation en los métodos, lanzan una excepción de tipo:  MethodArgumentNotValidException.class**
+## A tener en cuenta
+
+En término generales, hay 3 situaciones que hacen que las excepciones sean lanzadas:
+
+* excepciones que se producen en el **código cliente**. Utilización de APIS, parseo documentos json, xml, mala utilización JPA, etc.
+* excepciones por **fallos de recursos**. Falta de memoria, caída de red
+* **errores de programación**
+
+y por lo menos dos categorías de excepciones:
+
+* **Excepciones de negocio**. Deberían almacenarse en un sitio diferente a las excepciones de sistema.
+  * Excepciones de permisos --> generalmente referido a intentos de realizar acciones sobre recursos de negocio.
+* **Excepciones de aplicación**. De éstas últimas no habría que mostrarle los mensajes nativos al usuario.
+  * Exepciones de seguridad --> cuando se trata de acceder a un recurso con acceso restringido para el que no se tienen permisos. (habría que registrar usuario, acción/recurso, fecha)
+
+## Recomendaciones
+
+### destinos
+
+Hay que tener en cuenta a dónde queremos que sean dirigidas nuestras trazas para su almacenamiento final.
+
+* ¿dónde queremos que nuestras trazas sean dirigidas?
+* por cada destino, habrá que configurar un apender
+
+### Buenas prácticas y recomendaciones de uso
+
+* Almacenar los mensajes de error dentro de un fichero properties
+* Registrar las excepciones en un log
+* Definir niveles de prioridad
+* Diseñar diversos formatos de salida de la información de excepciones
+* **Las excepciones deben ser inmutables**. Sus campos deben estar definidos como final.
+* no capturar nunca excepciones de tipo Throwable
+
+### Información qeu debería mostrar
+
+* En qué capa:
+  * presentación
+  * negocio
+  * persistencia
+* Qué tipo
+  * entidades
+  * interfaces
+  * dao
+  * servicio
+  * vo
+  * dto
+  * util
+  * controlador
 
 ## Requisitos
 
@@ -26,16 +68,15 @@ https://kamer.dev/custom-javax-annotation-error-handling/ **--> Las validaciones
 * No perder información de las excepciones lanzadas a más bajo nivel en la aplicación. **Para mi esto implica que absolutamente todas las excepciones deben ser procesadas**
 * Mantener un Log de todas las excepciones que ocurren en el sistema y que sea lo más legible posible. **¿Cuadra esto con la idea de notificación de martin fowler?**
 Dar soporte al sistema de validaciones de la aplicación.
-* La estrategia planteada deberá ser en líneas generales la siguiente (planteamiento para JSF/ADF):
-    * Diseñar una jerarquía de excepciones especificando en qué casos se debe utilizar cada una de ellas.
-    * Establecer un conjunto de reglas para determinar que excepciones deben ser capturadas. Unas recomendaciones podrían ser:
-        * Las excepciones controladas deben ser capturadas en el método en el que se producen, transformadas en las excepciones de aplicación adecuadas y enviadas hacia las capas superiores. **aquí tengo mis dudas porque esto implica que no habrá excepciones unchecked**
-        * Las excepciones de tipo no controladas que se lancen en la capa de acceso a datos deberán ser capturadas en la capa de servicio y traducidas en una excepción de tipo Aplicación.
-        * Las excepciones de tipo no controlado que se produzcan en la capa de servicio se considerarán en general errores del sistema. Para evitar que su ocurrencia se muestre al usuario se tendrá que utilizar el mecanismo de control de errores Web. **esta es la parte que ya se está haciendo con ControllerAdvisor**
-        * En la capa de vista / controlador se tendrán que capturar tanto las excepciones de tipo Aplicación que provienen de las capas inferiores como las que se produzcan en esta capa. Las excepciones serán capturadas en el backing bean dentro de cada uno de los métodos donde se ejecuta el acceso a la capa de servicio.
+* La estrategia planteada deberá ser en líneas generales la siguiente:
+  * Diseñar una jerarquía de excepciones especificando en qué casos se debe utilizar cada una de ellas.
+  * Establecer un conjunto de reglas para determinar que excepciones deben ser capturadas. Unas recomendaciones podrían ser:
+    * Las excepciones controladas deben ser capturadas en el método en el que se producen, transformadas en las excepciones de aplicación adecuadas y enviadas hacia las capas superiores como excepciones no chequeadas.
+    * Las excepciones de tipo no controladas que se lancen en la capa de acceso a datos deberán ser capturadas en la capa de servicio y traducidas en una excepción de tipo Negocio.
+    * Las excepciones de tipo no controlado que se produzcan en la capa de servicio se considerarán en general errores del sistema. Para evitar que su ocurrencia se muestre al usuario se tendrá que utilizar el mecanismo de control de errores Web.
+    * En la capa de vista / controlador se tendrán que capturar tanto las excepciones de tipo aplicación/negocio que provienen de las capas inferiores como las que se produzcan en esta capa. Las excepciones serán capturadas en el backing bean dentro de cada uno de los métodos donde se ejecuta el acceso a la capa de servicio.
     * El sistema deberá gestionar los mensajes orientados a los usuarios y a los administradores. Los primeros serán los que se muestren en las páginas de la aplicación y los segundos los que se registren en el Log del sistema.
-    * Si se considera necesario, se tendrá que adaptar el mecanismo de ejecución de las acciones de los backing beans, para que todas compartan el mismo comportamiento respecto a las excepciones.
-
+    
 Lo más indicado es construir una jerarquía de clases propia del sistema en desarrollo. **tiene sentido hacer dos jerarquías "paralelas" de excepciones y notificaciones?**. Es posible que una parte de las excepciones deba quedar delegado a los micros, para que puedan aplicar su lógica de negocio.
 
 La complejidad de la jerarquía vendrá dada por:
@@ -44,8 +85,6 @@ La complejidad de la jerarquía vendrá dada por:
 * granularidad de tipos de excepción
 * Estrategia a seguir en la diferenciación de excepciones: por funcionalidad, por capa, por subsistema asociado, etc
   
-
-![propuesta junta andalucía](../../../../apuntes/java/excepciones/JerarquiaExcepciones.png)
 
 **SistemaException**: excepción base del sistema que contiene los métodos necesarios para la escritura de los mensajes de error en el Log. Hereda de java.lang.RuntimeException.
 
@@ -122,21 +161,21 @@ La principal alternativa al uso de excepciones es la utilización de retorno de 
 
 Ejemplo sencillo: validaciones sobre un bean, y si alguno de sus campos no es lo que esperábamos, se lanza una excepción. Así que de hecho, se está esperando que la aplicación falle.
 
-Sin embargo, esta forma de codificación tiene como propósito informar de una situación, que no se ajusta al propósito genérico de las excepciones, informar de que se produce una situación anómala. 
+Sin embargo, esta forma de codificación tiene como propósito informar de una situación, que no se ajusta al propósito genérico de las excepciones, informar de que se produce una situación anómala.
 
 **otro problema con este tipo de programación es que con el primer fallo que se detecte se enviará una excecpón y no se recogerá información del resto de fallos potenciales. Esta programación puede llegar a afectar mucho al rendimiento e interacciones de usuarios finales, si por cada campo mal introducido se le informa del primer error encontrado.**
 
 Pare este tipo de situaciones, recomienda untilzar un patrón notificación (Notification Pattern). Desde este punto de vista, una notificación es un objeto que recolecta errores. (Podría ser el ExceptionHelper o bien un recurso de ésta). La idea será algo así como notification.asErrors(). **tendría sentido hacer una anotación que permitiese cortar entre capas, de forma que se lance una excepción genérica para que no se tenga que programar el if notification.asErrors() en cada clase de controlador**
 
 > We believe that exceptions should rarely be used as part of a program's normal flow: exceptions should be reserved for unexpected events. Assume that an uncaught exception will terminate your program and ask yourself, "Will this code still run if I remove all the exception handlers?" If the answer is "no", then maybe exceptions are being used in nonexceptional circumstances.
-> 
+>
 > -- Dave Thomas and Andy Hunt (The programatic programer)
 
 Lo que plantea en el artículo es un recurso adicional al manejo de excepciones. Lo que quiero decir es que al pasar como parámetro un objeto en el que se van guardando los mensajes de error en lugar de las excepciones, obliga a:
 
 * pasar un parámetro adicional entre todas las capas
 * controlar en algún punto el corte que se produce entre capas y traducir estos mensajes a otros entendibles por la capa siguiente en la pila.
-* podría ser conveniente para los errores de negocio, pero no para los de programa. 
+* podría ser conveniente para los errores de negocio, pero no para los de programa.
 
 Orientar el enfoque de tratamiento de excepciones a los dos tipos de información que se utilizia:
 
@@ -183,3 +222,13 @@ Las excepciones deben proporcionar el contexto adecuado para determinar el motiv
 Patrón del caso especial de Martin Fowler.
 
 Y si la parte de expcepciones fuera genérica para el advisor y solo recibiera los mensajes del servicio
+
+## Fuentes
+
+* http://www.juntadeandalucia.es/servicios/madeja/contenido/recurso/214 **--> en este artículo tambión hay información general sobre el tratamiento de log**
+* https://www.linuxtopia.org/online_books/programming_books/thinking_in_java/TIJ311_020.htm
+* https://medium.com/@michael_altmann/error-handling-returning-results-2b88b5ea11e9
+* https://martinfowler.com/articles/replaceThrowWithNotification.html
+* https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#validation-conversion
+* https://kamer.dev/custom-javax-annotation-error-handling/ **--> Las validaciones de javax validation en los métodos, lanzan una excepción de tipo:  MethodArgumentNotValidException.class**
+* https://www.codeproject.com/Articles/32666/Exception-Concepts-for-Business-Applicationsinte
