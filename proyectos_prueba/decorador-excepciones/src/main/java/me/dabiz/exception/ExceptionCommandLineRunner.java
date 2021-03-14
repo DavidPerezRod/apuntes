@@ -1,18 +1,16 @@
 package me.dabiz.exception;
 
-import me.dabiz.exception.info.Layer;
-import me.dabiz.exception.info.Micro;
-import me.dabiz.exception.info.body.subcategory.http.HttpSubcategoryInfo;
-import me.dabiz.exception.info.business.rest.RestBusinessExceptionInfo;
-import me.dabiz.exception.info.body.subcategory.http.ServiceTypeError;
-import me.dabiz.exception.type.ZertiUncheckedException;
-import me.dabiz.exception.info.body.base.BusinessExceptionCategoryInfoBody;
-import me.dabiz.exception.info.body.subcategory.http.rest.RestSubcategoryInfo;
+
+import me.dabiz.exception.info.category.http.error.HttpErrorType;
+import me.dabiz.exception.info.type.UncheckedException;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-import static me.dabiz.exception.info.body.subcategory.http.HttpSubcategoryInfo.HttpSubcategorytype.SERVICE;
-
+import static me.dabiz.exception.info.category.Layer.*;
+import static me.dabiz.exception.info.scope.Micro.TOKEN;
+import static me.dabiz.exception.info.builder.ScopeInfoBuilder.newProgrammingExceptionInfo;
+import static me.dabiz.exception.info.category.http.error.ClientTypeError.BAD_REQUEST;
+import static me.dabiz.exception.info.category.http.error.rest.RestResourceCategoryInfoBuilder.newRestResourceExceptionInfo;
 
 @Component
 public class ExceptionCommandLineRunner implements CommandLineRunner {
@@ -25,14 +23,22 @@ public class ExceptionCommandLineRunner implements CommandLineRunner {
     public static void main(String[] args) {
         try {
             showMeTheMoney();
-        }catch (ZertiUncheckedException ex){
+        }catch (UncheckedException ex){
             System.out.println(ex.toString());
         }
     }
 
     private static void showMeTheMoney(){
-        BusinessExceptionCategoryInfoBody body=new BusinessExceptionCategoryInfoBody("Sin novedad en el frente", Layer.PERSITENCE);
-        RestBusinessExceptionInfo programmingExceptionInfo= new RestBusinessExceptionInfo(Micro.AIS, body, new RestSubcategoryInfo(SERVICE.name(), ServiceTypeError.INTERNAL_SERVER_ERROR));
-        throw new ZertiUncheckedException(programmingExceptionInfo);
+//        throw crateProgrammingException();
+        throw createRestResourceException();
     }
+
+    private static UncheckedException crateProgrammingException(){
+        return new UncheckedException(newProgrammingExceptionInfo().baseInfo("Error de inicializacion de variables", SERVICE).micro(TOKEN).build());
+    }
+
+    private static UncheckedException createRestResourceException(){
+        return new UncheckedException(newRestResourceExceptionInfo().categoryInfo(HttpErrorType.HTTP_CLIENT_ERROR, BAD_REQUEST).baseInfo("peticcion con errores", CONTROL).micro(TOKEN).build());
+    }
+
 }
