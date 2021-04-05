@@ -175,7 +175,7 @@ Lo que plantea en el artículo es un recurso adicional al manejo de excepciones.
 
 * pasar un parámetro adicional entre todas las capas
 * controlar en algún punto el corte que se produce entre capas y traducir estos mensajes a otros entendibles por la capa siguiente en la pila.
-* podría ser conveniente para los errores de negocio, pero no para los de programa.
+* podría ser conveniente para los errores de negocio, pero no para los de programa.  
 
 Orientar el enfoque de tratamiento de excepciones a los dos tipos de información que se utilizia:
 
