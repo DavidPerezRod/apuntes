@@ -75,6 +75,7 @@ Buscando he encontrado varias propuestas sobre cómo estructurar el código:
 * [Pandemonio digital](https://pandemoniodigital.es/arquitectura/2020/12/21/arquitectura-hexagonal-spring-boot.html)
 * [Mesa Redonda: arquitectura hexagonal](https://leanmind.es/es/blog/mesa-redonda-arquitectura-y-organizacion-de-directorios/)
 * [Hexagonal Architecture by example - a hands-on introduction](https://blog.allegro.tech/2020/05/hexagonal-architecture-by-example.html)
+* [Ejemplo de Arquitectura Hexagonal con Spring Data](https://refactorizando.com/ejemplo-de-arquitectura-hexagonal/)
 
 Probablemente la más purista de todas sea la última, me parece que respeta los principio descritos en arquitectura hexagonal, pero la propuesta de *_Mesa Redonda_* me parece muy interesante. 
 
