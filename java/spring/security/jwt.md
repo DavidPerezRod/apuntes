@@ -4,11 +4,15 @@ Se trata de un estándar abierto definido para el intercambio seguro de datos en
 
 Tiene la información necesaria para identificar una entidad, de forma que no es necesario consultar su información en BBDD ni guardarla en el servidor. Es una comunicación de sesión sin estado.
 
-Es posible cifrar mensajes cortos, dotarlos de información sobre el remitente e indicar si éste cuenta con los derechosd de acceso requeridos. Los usuarios no entran en acceso con el token, lo hacen de manera indirecta al introducir sus credenciales.
+Es posible cifrar mensajes cortos, dotarlos de información sobre el remitente e indicar si éste cuenta con los derechos de acceso requeridos. Los usuarios no entran en acceso con el token, lo hacen de manera indirecta al introducir sus credenciales.
 
 ## Estructura
 
 Un JWT firmado, consta de 3 partes codificadas de forma independiente en Base64: HEADER.PAYLOAD.SIGNATURE
+
+Así que se puede ver el contenido del token sin necesidad de saber la clave con la cual se ha generado, aunque no podremos validarlo sin la misma.
+
+La firma permite que si alguien modifica el token por el camino, inyectando alguna credencial o algún dato malicioso, entonces se podría verificar que la comprobación de la firma no es correcta.
 
 ### Header
 
@@ -39,7 +43,7 @@ También se puede añadir un parámetro adicional **_"cty"_** para el content-ty
 
 Es el cuerpo de la información que se transmitirá a la aplicación. Existen algunos conceptos específicos para su codificación:
 
-* La información se proporciona en pares clave-valor, en los que a la clave se la denomina **_"claim"_**
+* La información se proporciona en pares clave-valor, en los que a la clave se la denomina **_"claim"_**, y pueden utilizarse para definir los privilegios del usuario.
 * Todos los claims son opcionales
 * Un payload puede contenter un número ilimitado de claims (aunque es conveniente utilar la información del JWT al mínimo)
 
@@ -48,6 +52,7 @@ A su vez, los claims pueden clasificarse como:
 * Registrados. Ideados para establecer un estándar son los que se definen en el [IANA JSON Web Token Claim Register](https://www.iana.org/assignments/jwt/jwt.xhtml), tales como dominio, destino, etc
 * Públicos. Pensados para definirse a voluntad, así que no están sujetos a restricciones. Sin embargo si es necesrio resitrarlos en la misma IANA, o asignarles nombres que no puedan coincidir.
 * Privados. Destinados a definir los datos que intercambiamos con nuestras propias aplicaciones. Aunque algunos de los conceptos que se pueden intercambiar ya existen definidos como claims públicos, utilizar claims privados nos permite utilizarlos de forma más concreta. **_Hay que prestar atención al definirlos para que no coincidan con ninguno resgistrado o público_**
+
 
 ### Signature
 
@@ -84,6 +89,9 @@ La transmisión debe realizarse por medio de HTTPS para que los datos estén mej
 * Cuando se utilizan múltiples frameworks.
 
 
+
+
 ## Referencias
 
 * [digital Guide IONOS](https://www.ionos.es/digitalguide/paginas-web/desarrollo-web/json-web-token-jwt/)
+* [OpenWebinars](https://openwebinars.net/blog/que-es-json-web-token-y-como-funciona/)
