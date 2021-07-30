@@ -21,7 +21,61 @@ Sleuth se encarga de propagar las cabeceras del servicio cliente al servicio ser
 
 ## Integración
 
+### Sleuth
+
 Para la integración se ha partido de un proyecto Initializr con las principales librerías comunes al resto de proyectos, y se ha observado lo siguiente:
+
+#### maven
+
+* Las versiones de Spring-boot no coinciden. La de SVA es la 2.3.2.RELEASE y la de Initializr la 2.4.4. He probado a bajarla y no funciona
+* he añadido al pom (y funciona) los bloques de:
+    * build
+    * distributionManagement
+    
+* Con las librerías loycus y nuestra declaración de trazas, no funciona
+    
+* dependencias que funcionan:
+
+```XML
+      <dependency>
+      	<groupId>com.loycuspay</groupId>
+      	<artifactId>psd2.sign</artifactId>
+      	<version>0.0.1-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+      	<groupId>com.loycuspay</groupId>
+      	<artifactId>psd2.utilities</artifactId>
+      	<version>0.0.1-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+      	<groupId>com.loycuspay</groupId>
+      	<artifactId>psd2.security</artifactId>
+      	<version>0.0.1-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+      	<groupId>org.flywaydb</groupId>
+      	<artifactId>flyway-core</artifactId>
+      </dependency>
+      <dependency>
+      <groupId>io.micrometer</groupId>
+      <artifactId>micrometer-registry-prometheus</artifactId>
+      </dependency>
+      <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-ui</artifactId>
+      <version>1.3.9</version>
+      </dependency>
+              <!-- Micormeter core dependecy  -->
+      <dependency>
+      <groupId>io.micrometer</groupId>
+      <artifactId>micrometer-core</artifactId>
+      </dependency>
+```  
+  
+* dependencias declaradas de forma distinta
+  * lombok
+
+#### logback
 
 * La versión de Spring debe ser al menos la 2.4.4
 * Spring configura su propio appender para logback, que va cambiando entre versiones. Por eso, muchos de los proyectos de ejemplo que hay por internet, al descargarlos no funcionan bien.
@@ -31,6 +85,8 @@ Para la integración se ha partido de un proyecto Initializr con las principales
   *  con qué valor se guarda en setSystemProperty
   *  añadirlo en una clase para ver el contenido real del appender (en este punto se han sustituido todas las variables de la definición)
   *  importar la definición del appender a la definición específica de nuestro logback.
+
+### zipkin
 
 La imagen de zipkins se puede descargar directamente con docker:
 

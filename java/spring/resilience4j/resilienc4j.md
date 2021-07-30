@@ -24,11 +24,9 @@ En cuanto a Sentinel, las siguientes desventajas respecto a Resilience4J:
 
 Pero quizás la más importante es que la integración de Resilience4j con Spring Boot 2 permite dotar de plena funcioanlidad a travás de ficheros de configuración sin necesidad de programación.
 
-
 ## Resilience4j
 
 Los principales patrones que implementa Resilience4J para dotar de tolerancia a fallos, son:
-
 
 * [Circuit breaker](https://docs.microsoft.com/es-es/azure/architecture/patterns/circuit-breaker): dejar de hacer peticiones cuando el servicio invocado falla repetidamente
 * [Retry](https://docs.microsoft.com/es-es/azure/architecture/patterns/retry): realizar reintentos frente a fallos ocasionales
@@ -41,6 +39,7 @@ Algunas de las ventajas de Resilience4J frente a Hystrix, más ampliamente utili
 
 * se ejecuta en el mismo hilo que la aplicación principal
 * la implementación de los patrones no requiere programar clases adicionales
+* permite tanto programación declarativa (reactiva o funcional) e imperativa.
 * la configuración se puede hacer por:
   * código Java
   * anotaciones
@@ -50,22 +49,59 @@ Algunas de las ventajas de Resilience4J frente a Hystrix, más ampliamente utili
 
 Para la integración es necesario incluir las dependencias:
 
+* resilience4j-spring-boot2
+* resilience4j-all
+* resilience4j-reactor
 * org.springframework.boot:spring-boot-starter-actuator
 * org.springframework.boot:spring-boot-starter-aop
 * **_io.github.resilience4j:resilience4j-reactor_** Solo en caso de estar utilizando webflux
 
 ### Propiedades configurables de los patrones
 
-[#### Circuit Breaker](https://resilience4j.readme.io/docs/circuitbreaker)
+Cada patrón tiene un conjunto de propiedades de configuración, que por su extensión es mejor no detallar aquí y consultarlo directamente en la documentación de Resilience4j:
 
+* [Circuit Breaker](https://resilience4j.readme.io/docs/circuitbreaker)
+* [Bulkhead](https://resilience4j.readme.io/docs/bulkhead)
+* [RateLimiter](https://resilience4j.readme.io/docs/ratelimiter)
+* [Retry](https://resilience4j.readme.io/docs/retry)
+* [TimeLimiter](https://resilience4j.readme.io/docs/retry)
+* [Cache](https://resilience4j.readme.io/docs/cache)
 
+### Aspectos
 
+Además de las propiedades configurables para cada uno de los patrones, también existen anotaciones para activar cada uno de ellos en los servicios que se deseen proteger.
 
-When the percentage of slow calls is equal or greater the threshold, the CircuitBreaker transitions to open and starts short-circuiting calls.
-When the failure rate is equal or greater than the threshold the CircuitBreaker transitions to open and starts short-circuiting calls.
+Las anotaciones son:
 
+* @CircuitBreaker(name = BACKEND, fallbackMethod = "fallback")
+* @RateLimiter(name = BACKEND, fallbackMethod = "fallback")
+* @Bulkhead(name = BACKEND, fallbackMethod = "fallback")
+* @Retry(name = BACKEND, fallbackMethod = "fallback")
+* @TimeLimiter(name = BACKEND, fallbackMethod = "fallback")
+
+Todas tiene un atributo name, que debe coincidir con el nombre dado en el fichero de configuración a una sección dentro del patrón correspondiente, y fallbackMethod, que indica el método de recuperación que tratará el problema en caso de producirse.
+
+Algunas consideraciones adicionales que se deben tener en cuenta sobre las anotaciones son:
+
+* el método fallback debe estar definido en la misma clase
+* si hay múltiples métodos fallback definidos con el mismo nombre, se invocará al que tenga una signatura más parecida a la de la excepción que lo haya provocado.
+* se puede definir un método fallback genérico con un único parámetro que sea la excepción.
+
+Por defecto el orden en el que se aplican las anotaciones será:
+
+* Bulkhead
+* TimeLimiter
+* RateLimiter
+* CircuitBreaker
+* Retry
+
+Aunque este orden puede cambiarse en el fichero de configuración.
+
+### Métricas
+
+Todas las métricas producidas por cada uno de los patrones, pueden ser publicadas mediante Actuator/Micrometer y Prometheus para ser explotadas en otros sistemas como grafana.
 
 ## Referencias:
 
-* https://quickbooks-engineering.intuit.com/resiliency-two-alternatives-for-fault-tolerance-to-deprecated-hystrix-de58870a8c3f
-* 
+* [Comparativa soluciones](https://quickbooks-engineering.intuit.com/resiliency-two-alternatives-for-fault-tolerance-to-deprecated-hystrix-de58870a8c3f)
+* [Proyecto Resilience4j](https://resilience4j.readme.io/docs/getting-started)
