@@ -13,7 +13,7 @@ Es la herramienta del stack centrada en el tratamiento de logs. Con logstach, lo
 
 Pero no es una lista exclusiva, es solo una muestra representativa de todas las entradas que soporta.
 
-El tipo de información que recibe, es información sin procesra. Y es Logstach el que coge el mensaje y lo descompone para generar una nueva salida, con la información enriqucida. Estas fuentes de salida, al igual que ocurre con las de entrada, pueden ser muy diversas:
+El tipo de información que recibe, es información sin procesar. Y es Logstach el que coge el mensaje y lo descompone para generar una nueva salida, con la información enriqucida. Estas fuentes de salida, al igual que ocurre con las de entrada, pueden ser muy diversas:
 
 * elasticsearch
 * logs
@@ -31,9 +31,9 @@ Desde el punto de vista interno, en logstash se distinguen tres etapas:
 * filter (todos los filtros que se nos ocurran, campos de entrada, nuevos campos de salida o procesmiento intermedio)
 * output
 
-Además hay otro concepto importante, el de codec. Que se refiere al formato en el que se quieren recibir o enviar los datos, json, multilne, etc. En el caso de algunas tecnologías de entrada o salida, no hace falta utilizar codecs, porque logstac conoce la sintaxis de la herramienta con la que se va a conectar.
+Además hay otro concepto importante, el de codec. Que se refiere al formato en el que se quieren recibir o enviar los datos, json, multilne, etc. En el caso de algunas tecnologías de entrada o salida, no hace falta utilizar codecs, porque logstash conoce la sintaxis de la herramienta con la que se va a conectar.
 
-A la cadena input(codec)+filter+output(codec) es a lo que se conoce como pipeline. Hasta hace poco, solo logstash solo podía trabajar con un pipeline, pero ahora se puede trabajar con varios pipeline diferentes, de forma que si alguna de las entradas salidas falla, no afecte al resto de los pipelines. Antes, la forma de solucionarlo era mediante varios procesos logstash cada uno con su pipeline.
+A la cadena input(codec)+filter+output(codec) es a lo que se conoce como pipeline. Hasta hace poco, logstash solo podía trabajar con un pipeline, pero ahora se puede trabajar con varios pipeline diferentes, de forma que si alguna de las entradas/salidas falla, no afecte al resto de los pipelines. Antes, la forma de solucionarlo era mediante varios procesos logstash cada uno con su pipeline.
 
 ## Input
 
@@ -128,7 +128,7 @@ El codec file:
 * start_position. Posición desde la que se quiere empezar a leer el/los ficheros.
 * sincedb_path. Para lecturas sucesivas del fichero, si se produce un apagado de logstash. Retoma la lectura desde la última posición leída.
 
-Al igual que ocurre con la entrada estándar, por defecto este tipo de entrada no agrupa líneas, así qeu será necesario configurar el filtro. Al igual que en la entrada estándar el codec que hay que utiliszar es el multiline
+Al igual que ocurre con la entrada estándar, por defecto este tipo de entrada no agrupa líneas, así que será necesario configurar el filtro. Al igual que en la entrada estándar el codec que hay que utilizar es el multiline
 
 ```yml
 input {

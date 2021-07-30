@@ -1,22 +1,28 @@
-# Arquitectura EBI (Entidad-Limite-Interactor)
+# Arquitectura [EBI](https://ebi.readthedocs.io/en/latest/) (Entidad-Limite-Interactor)
 
-Aunque dada a conocer por Robert C. Martin, el patrón fue publicado por Ivar Jacobson en 1992. Originalmente era Entidad-Interfaz-Control, pero se cambió su nombre para no confundirlo con elementos de lenguajes de programación.
+Aunque fue dada a conocer por Robert C. Martin, la propuso Ivar Jacobson en 1992. Su nombre original, Entidad-Interfaz-Control, se cambió para evitar confusines con conceptos similares de los lenguajes de programación. Y se basa en la creencia de que *La arquitectura de una aplicación se rige por sus casos de uso*.
+
+Su propósito es producir una arquitectura agnóstica a la implementación, que no está atada a una plataforma, aplicación, lenguaje o marco específico; y cuyos elementos estén unidos por un acoplamiento lo más débil posible.
+
+
 
 ![representación](./images/entity_interface_control.jpg)
 
-## Entity 
+Sus responsabilidades:
 
-Este tipo de objetos contienen todos los datos utilizados por el sistema y el comportamiento acoplado a eestos datos. Cada entidad representa un concepto relevante dentro del dominio del problema, y mantiene la identidad de los datos persistentes. 
+## Entity
 
-Adicionalmente, Jacobson indica que que la naturaleza de la lógica que debe contener la entidad, es tal, que si la estructura de los datos que contiene cambia, las operaciones sobre estos datos también tendrán que cambiar. Por eso deben estar ubicados juntos.
+Las entidades contienen los datos utilizados por el sistema y los cálculos asociados a estos. Cada entidad representa un concepto relevante dentro del dominio del problema, y mantiene la identidad de los datos persistentes.
 
-Esta recomendación va en contra de lo que actualmente se conoce como entidades anémicas.
+Adicionalmente, Jacobson propone que la naturaleza de la lógica de la entidad, es tal, que si la estructura de los datos que contiene cambia, las operaciones sobre estos datos también tendrán que cambiar. Por eso deben estar ubicados juntos.
+
+Sin embargo, esta recomendación va en contra de lo que actualmente se conoce como entidades anémicas [modelo anémico](https://es.wikipedia.org/wiki/Modelo_de_dominio_an%C3%A9mico).
 
 ## Boundary (interfaz)
 
-Modelan todas las interfaces con el sistema. Toda la funcionalidad dependiente del entorno del sistema, pertenece a este tipo de objetos. En otras palabras, cualquier interacción del sistema con un actor, debe pasar por un objeto Boundary.
+Se trata de los objetos que modelan todas las interacciones con el sistema. En otras palabras, cualquier interacción del sistema con un actor, debe pasar por un objeto Boundary.
 
-**_Es sin duda de este concepto del que surge el actual de puertos y adaptadores._** A nivel de arquitectura, su responsabilidad es la misma. 
+**_Es sin duda de este concepto del que surge el actual de puertos y adaptadores._** A nivel de arquitectura, su responsabilidad es la misma.
 
 ## Interactor (control)
 
@@ -24,12 +30,11 @@ Los objetos interactor, según Jacobson son aquellos que orquestan un caso de us
 
 A su vez H Graca, los compara con los Servicios de Aplicación (que orquestan casos de uso) y servicios de dominio (que contienen el comportamiento de dominio que no recae en entidades.)
 
-La relevancia de éste último tipo de objetos es muy importante, ya que si la comunicación entre interfaces y entidades fuese directa, éstas últimas podrían acabar condicionando su lógica a los actores externos con los que se comunican.
-
+La relevancia de este último tipo de objeto es muy importante, ya que si la comunicación entre interfaces y entidades fuese directa, éstas últimas podrían acabar propagando su lógica a los actores externos con los que se comunican.
 
 ## Conclusión
 
-Como conclusión, se puede añadir que este tipo de especialización de objetos que identificó Jacobson, responde claramente al principio de responsabilidad único, en el que cada elemento debe tener un único motivo (o agente externo) que justifique sus cambios.
+Como conclusión, se puede añadir que este tipo de especialización de objetos que identificó Jacobson, responde claramente al principio de responsabilidad única, en el que cada elemento debe tener un único motivo (o agente externo) que justifique sus cambios.
 
 Según el propio Graca:
 
@@ -37,4 +42,7 @@ _Del mismo modo que en el patrón MVC el Modelo representa todo el back-end, tod
 
 _El patrón EBI es para el back-end lo que MVC es para el front-end. No son una alternativa el uno al otro, son complementarios. Si los juntáramos en un solo patrón podríamos llamarlo algo así como Vista-Controlador-Interactor-Entidad._
 
-_Traducción realizada con la versión gratuita del traductor www.DeepL.com/Translator_
+## Referencias
+
+* [EBI Architecture](https://herbertograca.com/2017/08/24/ebi-architecture/#more-10264)
+* [Entity-Boundary-Interactor](https://ebi.readthedocs.io/en/latest/core.html)

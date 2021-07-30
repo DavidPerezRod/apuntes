@@ -2,7 +2,7 @@
 
 ## MetricBeat
 
-Es un proceso ligero pensado para enviar estadísticas e aplicaciones. Inicialmente se utilizaba para sacar métrcas del sistema. Esta pensado para ayudar en la monitorización de servidores. Alkgunos de los sistemas más habituales en los que se puede integrar son:
+Es un proceso ligero pensado para enviar estadísticas de aplicaciones. Inicialmente se utilizaba para sacar métrcas del sistema, así que está pensado para ayudar en la monitorización de servidores. Alkgunos de los sistemas más habituales en los que se puede integrar son:
 
 * Apache
 * HAProxy
@@ -16,7 +16,7 @@ Es un proceso ligero pensado para enviar estadísticas e aplicaciones. Inicialme
 
 Su salida puede mandarse directamente a elasticsearch, logstash, redis o kafka. Además para el caso de kibana ya tiene una serie de dashboard por defecto, que pueden ser activados en el fichero yml de configuración.
 
-Con el comando: ./metricbeat modules list, se pueden lisatar todos los módulos disponibles, y cuáles de ellos están activos. Por defecto están a *.*.disabled, podemos activarlos mediante: ./metricbeat modules enable elasticsearch. Cada uno de estos ficheros contiene los detalles de monitorización.
+Con el comando: ./metricbeat modules list, se pueden lisatar todos los módulos disponibles, y cuáles de ellos están activos. Por defecto están a configurados com disabled, pero podemos activarlos mediante: ./metricbeat modules enable elasticsearch. Cada uno de estos ficheros contiene los detalles de monitorización.
 
 Una vez cambiada la configuración se puede probar mediante: ./metricbeat test config -c fichero.yml
 

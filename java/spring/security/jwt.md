@@ -14,6 +14,10 @@ Así que se puede ver el contenido del token sin necesidad de saber la clave con
 
 La firma permite que si alguien modifica el token por el camino, inyectando alguna credencial o algún dato malicioso, entonces se podría verificar que la comprobación de la firma no es correcta.
 
+El ciclo de acciones sería el siguiente:
+
+![secuencia autentiación jwt](./images/jwt.png)
+
 ### Header
 
 Proporciona información sobre el tipo de token y el algoritmo de firma, así que está compuesta por dos valores:

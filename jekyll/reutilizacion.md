@@ -71,7 +71,7 @@ Sin embargo, y aunque este procedimiento funciona, no es lo más eficiente, ya q
 
 Todos estos cambios el servidor los coge en caliente, así que no es necesario volverlo a ejecutar.
 
-Hay tres tipos de variablesimportantes:
+Hay tres tipos de variables importantes:
 
 * site. Se utiliza para acceder desde las páginas HTML tanto a las variables declaradas en el fichero de configuración _config.yml, como a ciertas características del sitio:
   * site.pages lista todas las páginas del site
