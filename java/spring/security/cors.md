@@ -1,6 +1,6 @@
 # Cross-Origin Resource Access 
 
-Itercambio de recuros de origen cruzado, es un mecanimo basado en cabeceras HTTP, que permite que un _user agent_ obtenga permiso para acceder a recursos desde un servidor, en un origen (dominio, protocolo o puerto) distinto al del documento que genera la nueva petición. 
+Intercambio de recuros de origen cruzado, es un mecanimo basado en cabeceras HTTP, que permite que un _user agent_ obtenga permiso para acceder a recursos desde un servidor, en un origen (dominio, protocolo o puerto) distinto al del documento que genera la nueva petición. 
 
 Por razones de seguridad, los navegadores restringen las solicitudes HTTP de origen cruzado iniciadas dentro de un script.
 
@@ -8,7 +8,7 @@ Para securizar este tipo de comunicaciones, el [W3C](https://www.w3.org/) propon
 
 En qué situaciones está indicado:
 
-* Invocaciones de las APIs XMLHttpRequest o  Fetch en una manera de sitio cruzado.
+* Invocaciones de las APIs XMLHttpRequest o  Fetch.
 * Fuentes Web (para usos de fuente en dominios cruzados @font-face dentro de CSS), para que los servidores puedan mostrar fuentes TrueType que sólo puedan ser cargadas por sitios cruzados y usadas por sitios web que lo tengan permitido.
 * Texturas WebGL.
 * Imágenes dibujadas en patrones usando drawImage.

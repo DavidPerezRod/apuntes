@@ -1,28 +1,28 @@
 # Introducción
 
-En el contexto de computación, existen algunos niveles de seguridad:
+En el contexto de computación se pueden encontrar diversos niveles de seguridad:
 
-* hardware. Previene ejecución de código no autorizado
-* sistema operactivo. acceso al computador y acciones que puedes realizar
-* bases de datos. acceso a la base de datos y acciones que se pueden realizar
-* borkers. lectura y escritura de mensajes en colas
-* red.
-* aplicación Acceso a las aplicaciones y acciones en su interior.
+* __Hardware__. Previene ejecución de código no autorizado
+* __Sistema operativo__. acceso al computador y acciones que puedes realizar
+* __Bases de datos__. acceso a la base de datos y acciones que se pueden realizar
+* __Brokers__. lectura y escritura de mensajes en colas
+* __Red__.
+* __Aplicación__ Acceso a las aplicaciones y acciones en su interior.
 
 ## Términos clave en seguridad
 
-* Identidad. Desde el punto de vista de la aplicación un actor único
-* credenciales. Habitualmente id y password
-* Autenticación (quién). Proceso de verificación de la identidad del peticionario
-* Autorización (qué ). Privilegios del usuario par realizar acciones.
+* __Identidad__. Desde el punto de vista de la aplicación un actor único
+* __Credenciales__. Habitualmente id y password
+* __Autenticación__(quién). Proceso de verificación de la identidad del peticionario
+* __Autorización__ (qué). Privilegios del usuario par realizar acciones.
 
-De todos estos niveles, Spring Security se centra, como es de esperar en el último, y en concreto quién puede hacer qué en el contexto de la aplicación.
+De todos estos niveles, Spring Security se centra, como es de esperar, en el último, y en concreto quién puede hacer qué en el contexto de la aplicación.
 
 Spring security proporciona:
 
-* protección contra las brechas de seguridad más habituales
-* integración con productos de terceros como LDAP
-* proporciona utilizadades para codificación de passwords.
+* Protección contra las brechas de seguridad más habituales
+* Integración con productos de terceros como LDAP
+* Utilizadades para codificación de passwords.
 
 ## Principales proveedores de autenticación en Spring
 
