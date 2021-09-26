@@ -1,28 +1,28 @@
 # Introducción
 
-En el contexto de computación se pueden encontrar diversos niveles de seguridad:
+En el contexto de computación, existen algunos niveles de seguridad:
 
-* __Hardware__. Previene ejecución de código no autorizado
-* __Sistema operativo__. acceso al computador y acciones que puedes realizar
-* __Bases de datos__. acceso a la base de datos y acciones que se pueden realizar
-* __Brokers__. lectura y escritura de mensajes en colas
-* __Red__.
-* __Aplicación__ Acceso a las aplicaciones y acciones en su interior.
+* hardware. Previene ejecución de código no autorizado
+* sistema operactivo. acceso al computador y acciones que puedes realizar
+* bases de datos. acceso a la base de datos y acciones que se pueden realizar
+* borkers. lectura y escritura de mensajes en colas
+* red.
+* aplicación Acceso a las aplicaciones y acciones en su interior.
 
 ## Términos clave en seguridad
 
-* __Identidad__. Desde el punto de vista de la aplicación un actor único
-* __Credenciales__. Habitualmente id y password
-* __Autenticación__(quién). Proceso de verificación de la identidad del peticionario
-* __Autorización__ (qué). Privilegios del usuario par realizar acciones.
+* Identidad. Desde el punto de vista de la aplicación un actor único
+* credenciales. Habitualmente id y password
+* Autenticación (quién). Proceso de verificación de la identidad del peticionario
+* Autorización (qué ). Privilegios del usuario par realizar acciones.
 
-De todos estos niveles, Spring Security se centra, como es de esperar, en el último, y en concreto quién puede hacer qué en el contexto de la aplicación.
+De todos estos niveles, Spring Security se centra, como es de esperar en el último, y en concreto quién puede hacer qué en el contexto de la aplicación.
 
 Spring security proporciona:
 
-* Protección contra las brechas de seguridad más habituales
-* Integración con productos de terceros como LDAP
-* Utilizadades para codificación de passwords.
+* protección contra las brechas de seguridad más habituales
+* integración con productos de terceros como LDAP
+* proporciona utilizadades para codificación de passwords.
 
 ## Principales proveedores de autenticación en Spring
 
@@ -98,6 +98,28 @@ Por su parte, Spring Security puede ayudar con las siguientes medidas:
 * En el caso de Content Security Policy, Spring no implementa un valor por defecto para este tipo de cabecera
   * puede ser configurado fácilmente desde Spring
   * mirar las recomendaciones de buenas prácticas sugeridas por OWASP.
+
+https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html
+
+https://cheatsheetseries.owasp.org/cheatsheets/Content_Security_Policy_Cheat_Sheet.html
+
+### Cross-site request forgery - CSRF
+
+Se trata de un tipo de ataque en el que se hacen pasar por un usuario cuando este ya está autenticado, para hacer peticiones al sitio web. Este tipo de ataque se hace enviando cookies de session en las que confía el servidor.
+
+Las acciones que toma Spring security para mitigar este tipo de ataques son:
+
+* haciendo que además del token de sincronización, se necesite un CSRF token aleatorio. Éste deber ser parte del HTTP request, y no generado automáticamente por el navegador.
+* No almacena este tipo de tokens en el navegador
+* utilizar HTTP headers
+* hidden form fileds
+
+Recientemente se ha añadido otro mecanismo, el atributo SameSite Cookie para indicarle al navegador que no envíe cookies cuando la request procede de otros sitios. El problema es que aunque es un atributo soportado por todos los navegadores modernos, no lo está en los viejos.
+Hay 3 niveles de restricción a los que puede ser confgurado:
+
+* none
+* lax
+* strict
 
 
 ### Spring security mitigación
