@@ -1,6 +1,6 @@
 # Reutilización
 
-Hay fundamentalmente 3 elmentos con los que podemos reutilizar contenidos entre páginas HTML:
+ Hay fundamentalmente 3 elmentos con los que podemos reutilizar contenidos entre páginas HTML:
 
 1. Fichero **_config.yml_**
 2. Front matter
