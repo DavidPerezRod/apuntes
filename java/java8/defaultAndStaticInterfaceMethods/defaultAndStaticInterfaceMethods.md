@@ -22,16 +22,15 @@ public interface Interf{
 # Static Method
 Al igual que la anterior, se trata de una característica proporcionada a partir de la versión 8 de Java.
 
-Un _static method_ es un método declarado en una interfaz con modificador _static_ y un cuerpo que proporciona la implementación. Se trata de un método de interfaz, que puede ser invocado sin hacer referencia a la instancia de un objeto particular
+Un _static method_ es un método declarado en una interfaz con modificador _static_ y un cuerpo que proporciona la implementación. Se trata de un método de interfaz que puede ser invocado sin hacer referencia a la instancia de un objeto particular
 
-## Características
-* una interfaz no hereda métodos estáticos de sus superinterfaces
+**_Una interfaz no hereda métodos estáticos de sus superinterfaces_**
 
 La documentación Oracle sobre las características de los métodos _static_ y _default_ de las interfaces está en: <https://docs.oracle.com/javase/specs/jls/se8/html/jls-9.html#jls-9.4.3> y de _static methods_ en <https://docs.oracle.com/javase/specs/jls/se8/html/jls-8.html#jls-8.4.3.2>
 
 ## Diferencias entre una interfaz con métodos por defecto y una clase abstracta
 
-|interface with default methods| abstract class|
+|interface con métodos default| clase abstracta|
 |------------------------------|---------------|
 |las variables son publicas, estáticas y final. No se pueden declarar variables de instancia| se pueden declarar variables de instancia, accesibles por clases hijas|
 | No conoce el estado de los objetos| forma parte del estado de los objetos|

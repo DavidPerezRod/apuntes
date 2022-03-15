@@ -194,11 +194,7 @@ Aún así se pueden combinar de las siguientes formas:
 * mezclar una protocolo sin estado HTTP en capas, sobre una columna vertebral de eventos.
 * tener interfaces separadas en cada servicio, una para los eventos y otra para respuesta a peticiones. Los eventos se crean para todos los cambios de estado y HTTP para las respuestas a solicitudes. Pero se debe tener cuidado a medida que el sistema crece, y seguramente el patrón de contexto agrupado sea más adecuado, ya que promueve el uso de transferencia de estado con eventos, mientras compartimenta las consultas remotas.
 
-
-
-
-
-# Referencias
+## Referencias
 
 *  [Confluent - Ben Stopford](https://www.confluent.io/blog/data-dichotomy-rethinking-the-way-we-treat-data-and-services/)
-*  
+  

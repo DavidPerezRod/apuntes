@@ -2,7 +2,7 @@
 
 Por sus siglas *_Open Authorization_* se trata de un protocolo estándar abierto, que permite la autenticación segura de API (interfaz para el intercambio de datos entre aplicaciones, interfaces de usuario y páginas web). Así que es necesario que la API autorice dicha transferencia para evitar que un tercero se puediese hacer con datos sensibles.
 
-Con este protocolo se permite a las aplicaciones un acceso limitado a los datos de los usuarios, sin tener que proporcionar sus credenciales, por lo que se desacopla la autenticación de la autorización de datos. 
+Con este protocolo se permite a las aplicaciones un acceso limitado a los datos de los usuarios, sin tener que proporcionar sus credenciales, por lo que se desacopla la autenticación de la autorización de datos.
 
 * Autenticación: el proceso de verificación de la identidad del usuario
 * Autorización:  proceso mediante el cual se controla el acceso a determinados recursos.
@@ -25,9 +25,6 @@ Sin embargo este procedimiento es el menos seguro de los que se recomiendan debi
 * Fue pensada como método de identificación, no como autenticación o autorización
 
 Su uso está indicado para una infraestructura propia, y fundamentalemtne para funciones de cosulta.
-
-
-
 
 ## Referencias 
 

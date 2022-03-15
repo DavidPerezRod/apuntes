@@ -3,3 +3,4 @@
 * [lambda paralel programing](https://www.arquitecturajava.com/expresiones-lambda-y-ejecucion-en-paralelo/)
 * [operador ::](https://www.geeksforgeeks.org/double-colon-operator-in-java/)
 * [streams](https://www.oracle.com/lad/technical-resources/articles/java/processing-streams-java-se8.html)
+* [streams2](https://www.oracle.com/java/technologies/architect-streams-pt2.html)
