@@ -1,6 +1,6 @@
 # Regimen PSD2
 
-PSD2 ES un marco regulatorio que trata de dinamizar los cambios que se están produciendo en los servicios de pago. Aunque las iniciativas en este tipo de servicios son constantes, es el negocio de los pagos minoristas en el que más se nota esta corriente gracias a las FinTech.
+PSD2 es un marco regulatorio que trata de dinamizar los cambios que se están produciendo en los servicios de pago. Aunque las iniciativas en este tipo de servicios son constantes, es el negocio de los pagos minoristas en el que más se nota esta corriente gracias a las FinTech.
 
 El acrónimo __**PSD2**__ corresponde a __**Pyament Service Directive 2**__, directiva que define la nomrativa europea sobre pagos online. Aunque entró en vigor en 2018, y su aplicación estaba prevista para el 14 de septiembre de 2019, la ABE (Autoridad Bancaria Europea), aprobó una moratoria de 12 a 14 meses.
 
@@ -52,7 +52,7 @@ Esta operatia tenía implicaciones en terminos de seguridad y eficiencia, ya que
 
 PSD2 mediante la regulación de los servicios de agregación o iniciación de pagos, trata de ofrecer soluciones de utilidad a comerciantes y consumidores, como canales de pago alternativos no vinculados a las tarjetas de pago.
 
-![resumen contexto PSD2](./imagenes/resumen_servicios.png)
+![resumen contexto PSD2](./imagenes/psd2-schema.png)
 
 ## Excepciones
 
@@ -74,6 +74,7 @@ PSD2 mediante la regulación de los servicios de agregación o iniciación de pa
 * ASPSP: Account Servicing Payment Service Provider
 * AISP: Account Information Service Provider
 * PISP: Payment Initiation Service Proiders
+* ABE: Autoridad Bancaria Europea
 
 ## Fuentes
 
