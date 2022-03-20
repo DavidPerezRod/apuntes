@@ -52,7 +52,8 @@ Esta operatia tenía implicaciones en terminos de seguridad y eficiencia, ya que
 
 PSD2 mediante la regulación de los servicios de agregación o iniciación de pagos, trata de ofrecer soluciones de utilidad a comerciantes y consumidores, como canales de pago alternativos no vinculados a las tarjetas de pago.
 
-![resumen contexto PSD2](./imagenes/psd2-schema.png)
+![PSD2 environment]({{site.baseurl}}/images/psd2-schema.png)
+*PSD2 environment*
 
 ## Excepciones
 
@@ -61,6 +62,12 @@ PSD2 mediante la regulación de los servicios de agregación o iniciación de pa
 * Los usuarios que hayan realizado una compra a través del móvil y, los datos de la tarjeta se hayan guardado en él, estarán exentos de la SCA.
 
 * Para los pagos o transacciones inferiores a 30 euros no se necesitará la autenticación reforzada, siempre que no sean más de 5 veces al día o llegue a los 100 euros en 24 horas
+
+## Conclusiones
+
+* Para los clientes de los servicios de pago, tanto particulares como empresas, se abre un escenario presidido por un mayor número de proveedores y servicios que, resueltos en un entorno tecnológico más seguro que el actual, deberá redundar en un incremento de la oferta y calidad de servicios y una disminución del precio de los mismos.
+* Para las entidades financieras, la oportunidad de establecer estrategias de colaboración con los TPPs autorizados ampliando la gama de servicios bancarios, lo que les da una oportunidad de monetizarlos.
+* Para Fintech y proveedores de servicios tecnológicos, el reto de desarrollar e implantar servicios de calidad que ofrezcan soluciones eficientes al elevado número de clientes de los servicios de pago.
 
 ## Glosario
 
