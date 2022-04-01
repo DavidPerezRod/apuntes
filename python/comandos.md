@@ -31,4 +31,59 @@ Otra forma de imprimir en Python es mediante interpoalción con format (f)
 
 print(f'se pone el tenxto y entre llaves una variable a concatenar {nombreVariable}')
 
-## Operadores
+En python los valores booleanos son True y False, capitalizada la primera letra.
+
+**_Ojo con los ámbitos de las variables. Estudiarlos_**
+
+## Sentencias de control
+
+
+|comando|sintaxis|
+|-------|-----------|
+|if|if condicion :|
+|if - else|if condicion : else:|
+|else if|elif condicion :|
+|while|while condicion :|
+|while - else |while condicion : else: ejecucion alternativa|
+|for|for contador in variable :|
+|for - range|for contador in range (valor) :|
+|for - else |for contador in variable : else: ejecución alternativa|
+|break|break|
+|continua |continua|
+
+### if
+
+Python separa los bloques de las sentencias de control por ": + tabulación dentro del bloque". No utiliza llaves
+
+Además para las sentencias de control, hay que tener en cuenta que en python cualquier condición de una variable distinta de vacío es True.
+
+condicion = "hola"
+
+if condicion: --> la ejecución entrará por el bloque if.
+
+---------------
+
+condición = ''
+
+if condicion:
+    ejecución 1
+else:
+    ejecución 2 --> la ejecución entrará por este otro bloque
+
+
+Al igual que en Java, existe un operador ternario para hacer más compacta la escritura de algunas sentencias de control. Sin embargo su sintaxis es muy distinta:
+
+(rama if) if condicion else (rama else)
+
+Sin embargo por su dificultad de lectura se recomienda solo en expresiones muy simples.
+
+### while
+
+La gran diferencia con otros lenguajes, es que admite una condición de salida, esto es:
+
+while condicion:
+    ejecucion1
+else: 
+    ejecucion2
+
+### for
