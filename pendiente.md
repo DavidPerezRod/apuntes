@@ -58,6 +58,9 @@
 
 ## Ejemplos Wikis GitHub
 * https://docs.github.com/es/communities/documenting-your-project-with-wikis/about-wikis
+* https://github.com/DavidPerezRod/markdown-snippets
+* https://github.com/DavidPerezRod/The-Documentation-Compendium
+* https://github.com/DavidPerezRod/documentation_builder
 * https://github.com/topics/forums
 * https://github.com/ellmetha/django-machina
 * https://github.com/guard/guard
