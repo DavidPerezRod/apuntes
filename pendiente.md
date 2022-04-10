@@ -69,3 +69,11 @@
 * https://github.com/anshumanv/awesome-anime-sources
 * https://github.com/Kotlin-lang-CN/Kotlin-CN
 * https://github.com/torrentpier/torrentpier
+
+## Feature flags
+* https://onix-systems.com/blog/introduction-to-feature-flags-in-java-using-the-spring-boot-framework
+* https://nullbeans.com/how-to-identify-vulnerable-dependencies-in-a-maven-project/
+* https://reflectoring.io/spring-boot-feature-flags/
+* https://www.baeldung.com/spring-feature-flags
+* https://www.split.io/blog/spring-boot-feature-toggles/
+* 
