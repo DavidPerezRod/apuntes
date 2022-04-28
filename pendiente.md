@@ -55,3 +55,25 @@
 
 * https://store.lospenotes.com/que-pasaria-si-plantases-arbustos-de-bayas/
 * https://www.about-garden.com/ei/en/00260-U1-cotoneaster-coral-beauty/
+
+## Ejemplos Wikis GitHub
+* https://docs.github.com/es/communities/documenting-your-project-with-wikis/about-wikis
+* https://github.com/DavidPerezRod/markdown-snippets
+* https://github.com/DavidPerezRod/The-Documentation-Compendium
+* https://github.com/DavidPerezRod/documentation_builder
+* https://github.com/topics/forums
+* https://github.com/ellmetha/django-machina
+* https://github.com/guard/guard
+* https://github.com/thredded/thredded
+* https://github.com/Erudika/scoold
+* https://github.com/anshumanv/awesome-anime-sources
+* https://github.com/Kotlin-lang-CN/Kotlin-CN
+* https://github.com/torrentpier/torrentpier
+
+## Feature flags
+* https://onix-systems.com/blog/introduction-to-feature-flags-in-java-using-the-spring-boot-framework
+* https://nullbeans.com/how-to-identify-vulnerable-dependencies-in-a-maven-project/
+* https://reflectoring.io/spring-boot-feature-flags/
+* https://www.baeldung.com/spring-feature-flags
+* https://www.split.io/blog/spring-boot-feature-toggles/
+* 

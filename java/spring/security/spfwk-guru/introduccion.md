@@ -1,14 +1,5 @@
 # Introducción
 
-En el contexto de computación, existen algunos niveles de seguridad:
-
-* hardware. Previene ejecución de código no autorizado
-* sistema operactivo. acceso al computador y acciones que puedes realizar
-* bases de datos. acceso a la base de datos y acciones que se pueden realizar
-* borkers. lectura y escritura de mensajes en colas
-* red.
-* aplicación Acceso a las aplicaciones y acciones en su interior.
-
 ## Términos clave en seguridad
 
 * Identidad. Desde el punto de vista de la aplicación un actor único
@@ -37,7 +28,7 @@ Spring security proporciona:
 
 En el caso de gestionar localmente la autenticación sin productos de terceros, Spring permite los siguietes métodos para almacenar y verificar contraseñas:
 
-* NoOP Password Encoder --> basado en texto plano. No se recomienda pero en ocasiones puede ser necesario para con legacy
+* NoOP Password Encoder --> basado en texto plano. No se recomienda pero en ocasiones puede ser necesario en sistemas legacy
 * BCrypt
 * Argon2
 * Pbkdf2
@@ -72,7 +63,7 @@ Es una organización sin ánimo de lucro cuyo objetivo es mejorar la seguridad d
 
 * Injection - Inyección de código malintencionado. En general Spring ha hecho un buen trabajo en este aspecto y utilizando la codificación adecuada, su riesgo es mínimo.
 * Broken authentication - Generalmente debido a una codificación in house. Para evitarlo, al igual que la anterior, lo más conveniente es utilizar el framework.
-* Sensitive data exposure - La principal forma de evitar este problema es no exponer stac traces.
+* Sensitive data exposure - La principal forma de evitar este problema es no exponer stack traces.
 * XML External entities - Se tratra de un error sobre el que se ha evolucionado mucho, y que se debía a procesadores XML pobremente configurados. La mejor forma de evitarlos, es tener dicho procesadores actualizados con todos sus parches, y además muchas de las aplicaciones web actuales intercambian datos en formato JSON.
 * Broken access control. Se debe a generalmente a que no se aplican correctamente las restricciones de usuario. La mejor forma de mitigarlo es mediante test que verifiquen dichas restricciones.
 * Security misconfigurations - La mejor forma de mitigarlo es mediante auditorías de seguridad.
