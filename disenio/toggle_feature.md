@@ -78,3 +78,4 @@ También podemos dividir nuestras categorías de conmutación en aquellas que so
 * https://www.baeldung.com/spring-reloading-properties
 
 * https://thepracticaldeveloper.com/practical-guide-feature-toggles-spring-boot/
+* https://reflectoring.io/spring-boot-feature-flags/

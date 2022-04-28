@@ -1,4 +1,4 @@
-# Actores PSD2
+# Actores
 
 Una vez descrito el propósito de la directiva europea PSD2, así como sus principales implicaciones, es conveniente comprender con mayor detalle los actores implicados, así como sus posibles interacciones. Puesto que lo habitual es que se les mencione por sus siglas en inglés, se hará referencia a todos ellos de esta forma.
 

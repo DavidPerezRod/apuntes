@@ -1,15 +1,47 @@
-# Oauth2
+---
+layout: post
+title:  "Autorización a Recursos: OAuth 2.0 "
+tags: [ Seguridad, Identidad Digital, Comunicaciones ]
+featured_image_thumbnail: assets/images/posts/2022/20220402-oauth/20220402-oauth-thumbnail.jpg
+featured_image: assets/images/posts/2022/20220402-oauth/20220402-oauth.jpg
+featured: true
+hidden: true
+---
 
-Por sus siglas *_Open Authorization_* se trata de un protocolo estándar abierto, que permite la autenticación segura de API (interfaz para el intercambio de datos entre aplicaciones, interfaces de usuario y páginas web). Así que es necesario que la API autorice dicha transferencia para evitar que un tercero se puediese hacer con datos sensibles.
+OAuth 2.0, ***Open Authorization 2.0***, es la segunda versión del estándar abierto Open Authorization. Propuesto por Blaine Cook y Chris Messina, es un framework de autorización que permite a servcios cliente obtener acceso limitado a la información de la cuenta de un usuario en un servicio proveedor, mediante comunicación HTTP.
+La clave está en que el servicio cliente delega la autenticación de un usuario al servicio que aloja la cuenta de éste, y obtiene autorización de acceso a la cuenta.
 
-Con este protocolo se permite a las aplicaciones un acceso limitado a los datos de los usuarios, sin tener que proporcionar sus credenciales, por lo que se desacopla la autenticación de la autorización de datos.
+De esta forma se permite a aplicaciones de terceros tener un acceso limitado a los datos de los usuarios, sin tener que proporcionar sus credenciales, por lo que desacopla la autenticación de la autorización de datos.
 
+<!--more-->
+
+### Actores
+
+Los actores que intervienen en una operación OAuth 2.0 son cuatro:
+
+* Propietario del Recurso (usuario)
+* Servidor de autorización
+* Servidor de recursos
+* Cliente (aplicación de terceros)
+
+#### Usuario
+
+Es el propietario del recurso que se va a compartir entre el Servidor de Recursos y la aplicación de terceros. 
+
+### Servidor de Autorización
+
+Verifica la identidad del usuario (autenticación) y genera tokens de acceso a la aplicación (autorización)
+
+#### conceptos
 * Autenticación: el proceso de verificación de la identidad del usuario
-* Autorización:  proceso mediante el cual se controla el acceso a determinados recursos.
+* Autorización: proceso mediante el cual se controla el acceso a determinados recursos.
+* Token de acceso: Es el elemento que otorga el Servidor de Autorización a la aplicación de terceros, para realizar solicitudes en nombre del usuario. Aunque a priori, no es necesario que tengan ningún formato en particular, en lo que respecta a la aplicación cliente es una cadena opaca. Se utilizará en la comunicación entre el Servidor de Recursos y la Aplicación Cliente para verificar los privilegios de acceso a los recursos solicictados.
 
-OAuth permite delegar la autorización de acceso a las APIs, una vez que se ha producido la autenticación. **_No es un protocolo de autenticación_**
+### Servidor de Recursos
 
-Así pues se trata de un protocolo de autorización, que proporciona una definición de flujos específicos para acceder alos datos del usuario desde aplicaciones consumidoras mediante el uso de diferentes tipos de tokens, entre ellos el JWT.
+Alojar las cuentas de usuario. En general desde el punto de vista de la comunicación entre cliente y proveedor, no suele existir diferencia entre Servidor de Autorización y Servidor de Recursos. El cliente se comunica de forma transparente mediante protocolo HTTP con ambos sin conocer cuál es cuál.
+
+### Aplicación cliente
 
 Por su parte OpenId es un protocolo de autenticación que amplia OAuth 2.0 dotándolo de una capa de autenticación.
 
@@ -26,7 +58,10 @@ Sin embargo este procedimiento es el menos seguro de los que se recomiendan debi
 
 Su uso está indicado para una infraestructura propia, y fundamentalemtne para funciones de cosulta.
 
-## Referencias 
+## Referencias
 
+* Photo by [Greg Bulla](https://unsplash.com/@gregbulla?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/)
+* [OAuth - Wikipedia](https://es.wikipedia.org/wiki/OAuth)
 * [IONOS Digital Guide](https://www.ionos.es/digitalguide/servidores/seguridad/oauth-y-su-version-oauth2/)
 * [Paradigma Digital](https://www.paradigmadigital.com/dev/oauth-2-0-equilibrio-y-usabilidad-en-la-securizacion-de-apis/)
+* [Una introducción a OAuth2](https://www.digitalocean.com/community/tutorials/una-introduccion-a-oauth-2-es)
