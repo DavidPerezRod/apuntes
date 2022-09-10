@@ -1,6 +1,6 @@
 # HTTP Basic Authentication
 
-HTTP Basic Authentication es parte de la especificación HTTP, cuyo origen está en RFC. Proporciona una vía estándar para el envío de nombre de usuario y su password desde los clientes. Hay dos formas de hacerlo:
+HTTP Basic Authentication es parte de la especificación HTTP, cuyo origen está en las especificaciones RFC 2617 y su actualización 7617. Proporciona una vía estándar para el envío de nombre de usuario y su password desde los clientes. Hay dos formas de hacerlo:
 
 * uno es mediante URL encoding, que es menos habitual, cuyo formato es: https://username:password@www.example.com. Sin embargo, el usuario y password no van encriptados, cualquiera que intercepte la petición puede obtener sus valores.
 * HTTP Header. Se envía una cabecera cuya clave es Authorization, y el valor es el mismo username:password codificados en base64. Sin embargo este método tampoco es seguro.

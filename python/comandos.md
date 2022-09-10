@@ -49,7 +49,8 @@ En python los valores booleanos son True y False, capitalizada la primera letra.
 |for - range|for contador in range (valor) :|
 |for - else |for contador in variable : else: ejecución alternativa|
 |break|break|
-|continua |continua|
+|continue |continua|
+|len(valor) | longitud de una lista|
 
 ### if
 
@@ -87,3 +88,48 @@ else:
     ejecucion2
 
 ### for
+
+for iteracion in variable:
+    ejecucion1
+else: 
+    ejecucion2
+
+## Listas
+
+La forma de definir una lista en Python, es:
+
+nombre_variable = ['Juan', 'Karla','Ricardo', 'María', True, 0, 3.23]
+
+Se puede observar que pueden tener cualquier cantidad de datos y de tipos. Se puede acceder a ellas como un array: 
+
+* nombre_variable[0.. n-1]
+
+Python ofrece también nuevas posibilidades de acceder al contenido de las listas:
+
+* posibilidad de acceder a los elementos de una lista por medio de índices inversos:
+    * nombre_variable[-1]
+    * nombre_variable[-2]
+    * nombre_variable[-3]
+* Acceder por rango. Admite dos notaciones
+    * nombre_variable[0:2], que en realidad es un rango abierto, cerrado: [0:2), incluye el 0 y no el 2
+    * nombre_variable[ :2], incluye los mismos valores que la anterior notación.
+    * nombre_variable[1 : ].  Esta caso es distinto, itera desde el elemnto 1 al final de la lista
+
+La forma de cambiar el valor de un elmento, es similar al resto de lenguajes:
+
+* nombre_variable[posicion]= nuevo_valor
+
+La forma de iterar en listas, es por medio de for
+
+* for valor in nombre_variable
+
+Las listas igual que en Java, tienen un conjunto de funciones definidos para operar sobre ellas, a las que se pueden acceder con el operador '.'.
+
+Diferencia entre remove, pop y del:
+* nombre_varible.pop() -> por defecto elimina el último elemento de la lista. Admite como segundo parámetro un índice.
+* nombre_variable.remove(objecto). Borra de la lista el elemento recibido como parámetro
+* del nombre_variable[indice]. Borra de la lista el elemento que se encuentra en la posición indice.
+
+Diferencia entre clear y del.
+* nombre_variable.clear(). Borra el contenido de la lista
+* del nombre_variable. Borra la variable de memoria, y ya no se puede acceder a ella.

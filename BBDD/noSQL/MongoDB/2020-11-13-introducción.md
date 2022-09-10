@@ -14,10 +14,10 @@ Entre las ventajas que aporta MongoDB respecto a de las BBDD tradicionales, enco
   * se pueden crear índices de cualquier campo
   * alto rendimiento mediante índices
 * Alta disponibilidad
-  * La estructura básica suele estar compuesta de un servidor primario y dos secundarios. El primario suele actuar como fachada del sistema, recibe todas las operaciones, y los secundarios, de forma asíncrona,  le preguntar por las operaciones que tienen pendiente de consumir.
+  * La estructura básica suele estar compuesta de un servidor primario y dos secundarios. El primario suele actuar como fachada del sistema, recibe todas las operaciones, y los secundarios, de forma asíncrona, le preguntan por las operaciones que tienen pendiente de consumir.
   * Por defecto tanto las lecturas como las escrituras se hacen desde el primario, pero puede estar configurado de otra forma.
   * Por este motivo se podrían realizar lecturas sucias. Si se pregunta a alguno de los servidores secundarios por alguna información disponible en el primario, pero que no está actualizada en el secundario
-  * Este tipo de estructura, y la capacidad de reorganización de los servidores, lo que hace que sea un sistema con capacidad para recuperarse de fallos. Si por ejemplo el servidor primario se cae, esa responsabilidad es asumida por uno de los servidores secundario, y una vez resuelta la indisponibilidad, el servidor se vuelve a incorporar al sistema como secundario.
+  * Es este tipo de estructura, y la capacidad de reorganización de los servidores, lo que hace que sea un sistema con capacidad para recuperarse de fallos. Si por ejemplo el servidor primario se cae, esa responsabilidad es asumida por uno de los servidores secundario, y una vez resuelta la indisponibilidad, el servidor se vuelve a incorporar al sistema como secundario.
 
 ## Big Data, NoSQL, MongoDB
 
@@ -51,7 +51,7 @@ Intenta medir el grado de cumplimiento de 3 variables:
 
 Lo que dice el teorema es que un sistema distribuido, solo puede proporcionar dos de estas variables al mismo tiempo.
 
-MongoDB en su sistema de funcionamiento por defecto es CP, proporciona consistencia y tolerancia a la partición. en grado máximo. Sí proporciona disponibilidad, pero lo hace en un grado inferior a las otras dos.
+MongoDB en su sistema de funcionamiento por defecto es CP, proporciona consistencia y tolerancia a la partición. en grado máximo. También proporciona disponibilidad, pero lo hace en un grado inferior a las otras dos.
 
 A continuación se muestra una pequeña clasificación de las principales BBDD del mercado según el teorema CAP
 
