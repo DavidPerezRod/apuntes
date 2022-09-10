@@ -13,13 +13,6 @@ En primer lugar, hay que entender los conceptos generales de las excepciones jav
 
 2. Entender que no es recomendable declarar subtipos personalizados de de Throwable, ya que la mayoría de soluciones y librerías basadas en java consideran que Error y Exception son los únicos tipos que heredan de Exception.
 
-http://www.juntadeandalucia.es/servicios/madeja/contenido/recurso/214 **--> en este artículo tambión hay información general sobre el tratamiento de log**
-https://www.linuxtopia.org/online_books/programming_books/thinking_in_java/TIJ311_020.htm
-https://medium.com/@michael_altmann/error-handling-returning-results-2b88b5ea11e9
-https://martinfowler.com/articles/replaceThrowWithNotification.html
-https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#validation-conversion
-https://kamer.dev/custom-javax-annotation-error-handling/ **--> Las validaciones de javax validation en los métodos, lanzan una excepción de tipo:  MethodArgumentNotValidException.class**
-
 ## Requisitos
 
 * Evitar que la ocurrencia de excepciones se muestre al usuario final en pantalla de forma incontrolada. **Esta parte está asgurada con el control de excepciones de Spring para los controladores**
@@ -122,7 +115,7 @@ La principal alternativa al uso de excepciones es la utilización de retorno de 
 
 Ejemplo sencillo: validaciones sobre un bean, y si alguno de sus campos no es lo que esperábamos, se lanza una excepción. Así que de hecho, se está esperando que la aplicación falle.
 
-Sin embargo, esta forma de codificación tiene como propósito informar de una situación, que no se ajusta al propósito genérico de las excepciones, informar de que se produce una situación anómala. 
+Sin embargo, esta forma de codificación tiene como propósito informar de una situación, que no se ajusta al propósito genérico de las excepciones, informar de que se produce una situación anómala.
 
 **otro problema con este tipo de programación es que con el primer fallo que se detecte se enviará una excecpón y no se recogerá información del resto de fallos potenciales. Esta programación puede llegar a afectar mucho al rendimiento e interacciones de usuarios finales, si por cada campo mal introducido se le informa del primer error encontrado.**
 
@@ -160,7 +153,7 @@ If a ConstraintValidationException is thrown, the JAX-RS runtime will respond to
 
 400 (Bad Request) in all other cases
 
-Sobre el tema de las notificaciones y las excepciones. ¿tiene sentido propagar por todo el flujo del sistema una notificación cuando no se va a tratar entre las capas inermedias hasta su salida, o cuando no se va a hacer ningún tratamiento de wrapper con ella. Quiero decir, y qué pasa si se lanza una excepción no chequeda desde la capa quesea, y se recibe en el controlador para tratarla?
+Sobre el tema de las notificaciones y las excepciones. ¿tiene sentido propagar por todo el flujo del sistema una notificación cuando no se va a tratar entre las capas inermedias hasta su salida, o cuando no se va a hacer ningún tratamiento de wrapper con ella. Quiero decir, y qué pasa si se lanza una excepción no chequeda desde la capa que sea, y se recibe en el controlador para tratarla?
 
 ¿se pueden aplicar aspectos sobre la propagación de excepciones?
 
@@ -183,3 +176,16 @@ Las excepciones deben proporcionar el contexto adecuado para determinar el motiv
 Patrón del caso especial de Martin Fowler.
 
 Y si la parte de expcepciones fuera genérica para el advisor y solo recibiera los mensajes del servicio
+
+
+
+
+
+
+
+http://www.juntadeandalucia.es/servicios/madeja/contenido/recurso/214 **--> en este artículo tambión hay información general sobre el tratamiento de log**
+https://www.linuxtopia.org/online_books/programming_books/thinking_in_java/TIJ311_020.htm
+https://medium.com/@michael_altmann/error-handling-returning-results-2b88b5ea11e9
+https://martinfowler.com/articles/replaceThrowWithNotification.html
+https://docs.spring.io/spring-framework/docs/current/reference/html/core.html#validation-conversion
+https://kamer.dev/custom-javax-annotation-error-handling/ **--> Las validaciones de javax validation en los métodos, lanzan una excepción de tipo:  MethodArgumentNotValidException.class**
