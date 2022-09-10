@@ -133,7 +133,6 @@ Hay bastantes maneras de crear streams, la más habitual a partir de colecciones
 * Stream.iterate(0, n -> n + 10)
 * Stream.generate(new Random()::nextInt)
 
-
 [revisar este contenido](https://www.oracle.com/java/technologies/architect-streams-pt2.html)
 
 [<< operador ::](./../operador::.md)

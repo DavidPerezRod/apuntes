@@ -81,12 +81,12 @@ Tabla resumen implementación herencia entre clases anónimas y expresiones lamb
 
 ||clase anónima|lamda expresion|
 |-|-------------|------------------|
-|clase convencionaL|SI|NO|
+|clase convencional|SI|NO|
 |clase abstracta|SI|NO|
 |interfaz convencional|SI|NO|
 |interfaz funcional|SI|SI|
 
-Sin embargo, hay otras diferencias a tener en cuenta
+Hay otras diferencias a tener en cuenta
 
 |clase anónima|lamda expresion|
 |-------------|------------------|
@@ -100,11 +100,11 @@ Sin embargo, hay otras diferencias a tener en cuenta
 
 Sin embargo y pese a que las clases anónimas abarcan un rango más amplio de implementación, las expresiones lambda tienen una serie de ventajas:
 
-* habilitan la programación funcional en java
-* reducen la longitud del código haciéndolo más legible
-* se pueden asignar procedimientos/funciones a variables
-* por lo tanto se pueden pasar procedimiento/funciones como parámetros.
-* soportan procesamiento paralelo.
+* Habilitan la programación funcional en java
+* Reducen la longitud del código haciéndolo más legible
+* Se pueden asignar procedimientos/funciones a variables
+* Por lo tanto se pueden pasar procedimiento/funciones como parámetros.
+* Soportan procesamiento paralelo.
 
 [<< lambda expresions](./lambdaExpresions.md)
 

@@ -1,14 +1,14 @@
 # Interfaces funcionales predefinidas
 
-Se encuentran en el paquete java.util.function y puedes encontrar su especificación en la  [página oficial] (https://docs.oracle.com/javase/8/docs/api/java/util/function/package-summary.html).
+Se encuentran en el paquete java.util.function y puedes encontrar su especificación en la  [página oficial](https://docs.oracle.com/javase/8/docs/api/java/util/function/package-summary.html).
 
-¿Por qué pueden sernos de utilidad las interfaces funcionales?. Son varios los motivos. 
+¿Por qué pueden ser de utilidad las interfaces funcionales?. Son varios los motivos.
 
-* Evitan que tengamos que estar definiendo constantemente interfaces funcionales específicas para nuestro código, ya que cubren un rango amplio de situaciones.
+* Evitan que se tenga que estar definiendo constantemente interfaces funcionales específicas para nuestro código, ya que cubren un rango amplio de situaciones.
 
-* proporcionan algunos métodos por defecto y estáticos de bastante útiles.
+* Proporcionan algunos métodos por defecto y estáticos de bastante útiles.
 
-* Per su mayor uso lo tenemos con los streams y las operaciones basadas en streams.
+* Pero su mayor uso lo tenemos con los streams y las operaciones basadas en streams.
 
 Los tipos de interfaces predefinidas son cuatro:
 
@@ -22,8 +22,9 @@ Los tipos de interfaces predefinidas son cuatro:
 Se trata de una interfaz funcional para representar que "alguien" consume "algo". Así que su representación inmediata es un método que recibe un parámetro, el que consume, y que no devuelve nada.
 
 ```java
-package java.util.function;@FunctionalInterface
+package java.util.function;
 
+@FunctionalInterface
 public interface Consumer<T> {
     void accept(T var1);
     default Consumer<T> andThen(Consumer<? super T> after) {
@@ -36,7 +37,9 @@ public interface Consumer<T> {
 }
 ```
 
-Un ejemplo que hace uso de esta implementación es el siguiente: 
+Un aspecto importante, es que la generación es perezosa, y no se realiza hasta que se invoca al método accept de la interfaz.
+
+Un ejemplo que hace uso de esta implementación es el siguiente:
 
 ```java
 public static void main(String[] args) {
@@ -71,26 +74,12 @@ public static void main(String[] args) {
 }
 ```
 
-Un aspecto importante, es que la generación es perezosa, y no se realiza hasta que se invoca al método accept de la interfaz. 
-
 ### Predicate
 
 Un predicato es algo que se puede afirmar o negar sobre algo en lógica proposicional. En términos prácticos, afirma o niega algo a partir de la condición lógica que implemente.
 package java.util.function;
 
-@FunctionalInterface
-public interface Function<T, R> {
-    R apply(T var1);
-
-    default <V> Function<V, R> compose(Function<? super V, ? extends T> before) { ... }
-
-    default <V> Function<T, V> andThen(Function<? super R, ? extends V> after) { ... }
-
-    static <T> Function<T, T> identity() { ... }
-}
 ```java
-package java.util.function;
-
 @FunctionalInterface
 public interface Predicate<T> {
     boolean test(T var1);
@@ -119,8 +108,9 @@ public static void main(String[] args) {
 }
 ```
 
-De forma similar a como se encadenan consumidores, spackage java.util.function;
+De forma similar a como se encadenan consumidores:
 
+```java
 @FunctionalInterface
 public interface Function<T, R> {
     R apply(T var1);
@@ -173,8 +163,6 @@ default Predicate<T> negate() {
 Este tipo de funciones predefinidas, se comportan como una función matemática, dada una entrada, se realiza una transformación sobre ella, proporcionando una nueva salida. Advertir que el tipo de salida que se va a obtener está parametrizado en el método por defecto apply
 
 ```java
-package java.util.function;
-
 @FunctionalInterface
 public interface Function<T, R> {
     R apply(T var1);
@@ -187,7 +175,7 @@ public interface Function<T, R> {
 }
 ```
 
-Como se ve en la definición, dispone de una serie de métodos estáticos y por defectos, que evaluan la identidad y composición de funciones, así como la concatenación de éstas.
+Como se ve en la definición, dispone de una serie de métodos estáticos y por defectos, que evalúan la identidad y composición de funciones, así como la concatenación de éstas.
 
 La implementación de compose es la siguiente:
 
