@@ -1,6 +1,6 @@
 # Introducción
 
-Un motor de flujo de trabajo, gestiona el flujo de un proceso de negocio a través de microservicios mediante la visualización, el funcionamiento y la presentación de informes sobre el proceso.
+Un workflow gestiona el flujo de un proceso de negocio a través de microservicios mediante la visualización, el funcionamiento y la presentación de informes sobre el proceso.
 
 Un motor de flujo de trabajo no tiene que ser necesariamente implementado como un componente único y central. Puede optar por múltiples motores de flujo de trabajo descentralizados para aumentar aún más la independencia del equipo.
 
@@ -73,8 +73,54 @@ Estos puntos apuntarán las áreas en las que implementar un workflow añadirán
   * Proporcionar informes de la eficiencia de los procesos
   * Permite orquestar microservicios, y aplicaciones empresariales heredadas.
   
-Cuando algo va mal en un proceso empresarial, todos los pasos del proceso que ya se han ejecutado deben deshacerse en el orden correcto para que el sistema global vuelva a un estado coherente. En una arquitectura de aplicación tradicional con una interfaz de usuario, una capa de lógica de negocio y una base de datos relacional, este trabajo se suele gestionar mediante transacciones de base de datos. Sin embargo, este tipo de transacciones no son adecuadas para un sistema distribuido. En cambio, un motor de flujo de trabajo puede manejar las actividades de compensación necesarias, de forma automática y fiable, a través de múltiples 
+Cuando algo va mal en un proceso empresarial, todos los pasos del proceso que ya se han ejecutado deben deshacerse en el orden correcto para que el sistema global vuelva a un estado coherente. En una arquitectura de aplicación tradicional con una interfaz de usuario, una capa de lógica de negocio y una base de datos relacional, este trabajo se suele gestionar mediante transacciones de base de datos. Sin embargo, este tipo de transacciones no son adecuadas para un sistema distribuido. En cambio, un motor de flujo de trabajo puede manejar las actividades de compensación necesarias, de forma automática y fiable, a través de múltiples.
+
+## ¿Cuándo podría ser necesario a nivel de aplicación?
+
+* Cuando existen procesos que deben ser ejecutados en un contexto diferente al del sistema principal
+* Cuando estos procesos backend realizan tareas dependientes del estado de una tarea anterior
+
+Con este último requisito, una implementación que utilice un único conjunto de llamadas a métodos de estilo procedimiental suele resultar inadecuada.
+
+# Dudas
+
+* Cómo utilizar el workflow. Solo para definición de flujo, o también para guardar el estado de los procesos.
+* Identificar los patrones de flujo que van a intervenir a la hora de decantarse por un desarrollo personalizado, o por la adopción de soluciones de terceros.
+* ¿Cómo controlaríamos los estados?¿Lo ideal sería controlarlos por código de respuesta http?. Esto permitiría jugar rangos. ¿Lo ideal sería producir una salida de estado + datos?. ¿Lo ideal sería guardarlo en una tabla sesión?
+* ¿Deberían las salidas, ser una url y un verbo? ¿admitiría parámetros de cabecera, body, etc?
+* Diferenciar entre estados bloqueantes, conjunto de estados síncronos, conjunto de estados bloqueantes, etc.
+* El control debería estar en el API-Gateway
+
+# Workflows comerciales
+
+## Activiti
+
+* Funciona con Spring Boot hasta la v1.5.4. Todavía no funciona con la v2.0.0.M1.
+* Eatá orientado a workflows que se ejecutan como parte del contexto de la aplicación.
+* Requiere definir flujos mediante algún model BPMN lo cual a su vez implica aprender a manejar la notación BPMN.
+* Requiere configuración XML
+
+## Spring Web Flow
+
+* Está basado en Spring MVC
+* Permite implementar flujos de una aplicación web
+* Está recomendado para aplicaciones web con estado y navegación controlada, esto es:
+  * Hay un punto de inicio y un punto final claros
+  * El usuario debe pasar por un conjunto de pantallas en un orden específico
+  * Los cambios no se finalizan hasta el último paso
+  * Una vez completado no debería ser posible repetir una transacción accidentalmente
+  * Proporciona solución a los siguientes problemas:
+    * La visualización del flujo es muy difícil.
+    * La aplicación tiene mucho código que accede a la sesión HTTP.
+    * La aplicación de la navegación controlada es importante pero no es posible.
+    * El soporte adecuado del botón de retroceso del navegador parece inalcanzable.
+    * El navegador y el servidor se desincronizan con el uso del botón "Atrás".
 
 # Referencias
 
+
 * [ Amy Johnston, Microservices and Workflow Engines, DZone:](https://dzone.com/refcardz/microservices-and-workflow-engines)
+* https://www.infoworld.com/article/2071865/use-spring-to-create-a-simple-workflow-engine.html?page=2
+* https://www.javacodegeeks.com/2012/11/simple-workflow-engine-with-spring.html
+* http://www.workflowpatterns.com/patterns/control/
+* https://www.baeldung.com/spring-activiti
