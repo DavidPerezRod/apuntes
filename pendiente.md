@@ -4,6 +4,8 @@
   
 # Pendiente de leer
 
+* https://cloud-techtwitter.blogspot.com/p/microservices.html
+
 ## Personal
 
 ### MIO
@@ -13,7 +15,7 @@
 * [SEO](https://rockcontent.com/es/blog/que-es-seo/)
 * [Crear API REST](https://www.nigmacode.com/java/crear-api-rest-con-spring/)
 * [¿qué es OpenAPI?](https://www.ionos.es/digitalguide/paginas-web/desarrollo-web/que-es-openapi/)
-* [¿Debo usar WADL para describir mi API RESTful?](https://www.it-swarm-es.com/es/web-applications/debo-usar-wadl-para-describir-mi-api-restful/l967295701/)
+* [¿Debo usar WADL para describir mi resAPI RESTful?](https://www.it-swarm-es.com/es/web-applications/debo-usar-wadl-para-describir-mi-api-tful/l96729570x c 1/)
 * [HATEOAS (Hypermedia As The Engine Of Application State – Hipermedia Como Motor del Estado de la Aplicación)](https://www.ionos.es/digitalguide/paginas-web/desarrollo-web/hateoas-que-es-y-cual-es-su-funcion-en-las-api-rest/
 * [API Gateway](https://www.itdo.com/blog/api-gateway-en-tu-arquitectura-de-microservicios/)
 * [websocket](https://www.itdo.com/blog/rest-vs-websocket-que-diferencia-hay/)
@@ -57,6 +59,7 @@
 * https://www.about-garden.com/ei/en/00260-U1-cotoneaster-coral-beauty/
 
 ## Ejemplos Wikis GitHub
+* https://github.com/dauxio/daux.io/blob/master/README.md
 * https://docs.github.com/es/communities/documenting-your-project-with-wikis/about-wikis
 * https://github.com/DavidPerezRod/markdown-snippets
 * https://github.com/DavidPerezRod/The-Documentation-Compendium
@@ -77,3 +80,7 @@
 * https://www.baeldung.com/spring-feature-flags
 * https://www.split.io/blog/spring-boot-feature-toggles/
 * 
+
+## JPA y relaciones
+
+* https://javatechonline.com/entity-relationship-in-jpa-hibernate-orm/

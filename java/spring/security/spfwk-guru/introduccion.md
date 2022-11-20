@@ -68,7 +68,7 @@ Es una organización sin ánimo de lucro cuyo objetivo es mejorar la seguridad d
 * Broken access control. Se debe a generalmente a que no se aplican correctamente las restricciones de usuario. La mejor forma de mitigarlo es mediante test que verifiquen dichas restricciones.
 * Security misconfigurations - La mejor forma de mitigarlo es mediante auditorías de seguridad.
 * CrossSite Scripting - Permite inyectar código HTML o Javascript. La mejor forma de evitar este tipo de ataques es mediante validaciones adecuadas y escaping.
-* Insecure deserialization - Puede permitir la ejecución de código remoto. La mejor forma de mitigarlo es actualizar los parches del open source utilizado
+* Insecure deserialization - Puede permitir la ejecución de código remoto. La mejor forma de mitigarlo es actualizar los parches del open source
 * Using components with known vulnerabilities - La mejor forma de mitigarlo es aplicar las actualizaciones con frecuencia.
 * Insuficient Loggiing & Monitoring. La forma de mitigarlo es monitorizar adecuadamente los sistemas.
 
@@ -78,7 +78,7 @@ Este tipo de ataques se caracterizan porque dentro los campos input de un formul
 
 Así pues las medidas que se pueden tomar son:
 
-* eliminar de los inputs los cara caracteres javascript
+* eliminar de los inputs los caracaracteres javascript
 * codificar los caracteres especiales como HTML
 
 Hay muchas otras medidas que se pueden tomar a nivel de HTML, que se pueden encontrar entre las recomendaciones OWASP.

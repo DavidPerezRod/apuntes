@@ -71,7 +71,7 @@ Otros comandos de utilidad:
 Características de la consola MongoDB:
 
 * interpreta Javascript
-* hasta la v2.2 el motor que utilizaba era SpiderMonkety
+* hasta la v2.2 el motor que utilizaba era SpiderMonkey
 * desde la v2.4 utiliza el motor V8 de google.
 
 Comandos:

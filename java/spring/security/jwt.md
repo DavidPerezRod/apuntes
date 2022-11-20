@@ -32,14 +32,14 @@ Proporciona información sobre el tipo de token y el algoritmo de firma, así qu
 }
 ```
 
-Es recomendable qwue el tipo se a JWT ya que equivale a application/jwt, y en cuanto a los métodos de cifrado los más habituales:
+Es recomendable qwue el tipo sea JWT ya que equivale a application/jwt, y en cuanto a los métodos de cifrado los más habituales:
 
 * HS256
 * RSA
 * SHA-256
 * ECDSA
 
-No se recomienda prescindir de cifrado, aunqeu se puede indicar none si no se necesita un nivel de protección alto.
+No se recomienda prescindir de cifrado, aunque se puede indicar none si no se necesita un nivel de protección alto.
 
 También se puede añadir un parámetro adicional **_"cty"_** para el content-type, si el token va firmado o cifrado.
 
