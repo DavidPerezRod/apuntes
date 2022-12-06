@@ -59,6 +59,7 @@
 * https://www.about-garden.com/ei/en/00260-U1-cotoneaster-coral-beauty/
 
 ## Ejemplos Wikis GitHub
+* https://github.com/dauxio/daux.io/blob/master/README.md
 * https://docs.github.com/es/communities/documenting-your-project-with-wikis/about-wikis
 * https://github.com/DavidPerezRod/markdown-snippets
 * https://github.com/DavidPerezRod/The-Documentation-Compendium
