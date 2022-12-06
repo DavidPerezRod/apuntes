@@ -1,3 +1,11 @@
+
+https://openphoto.net/gallery/image/view/33102
+
+foto https://www.pexels.com/photo/white-diagram-paper-under-pliers-1178498/
+
+https://www.pexels.com/photo/person-in-blue-shirt-wearing-brown-beanie-writing-on-white-dry-erase-board-7368/
+
+
 # Introducción
 
 Un workflow gestiona el flujo de un proceso de negocio a través de microservicios mediante la visualización, el funcionamiento y la presentación de informes sobre el proceso.

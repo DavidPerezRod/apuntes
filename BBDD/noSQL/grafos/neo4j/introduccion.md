@@ -1,6 +1,6 @@
 # Introducción
 
-Un grafo es una colecciónd e vértices y aristas, cuyas propiedades son:
+Un grafo es una colección de vértices y aristas, cuyas principales características son:
 
 * Los nodos tienen propiedades clave-valor
 * Los nodos pueden ser etiquetados con una o más etiquetas
@@ -41,5 +41,3 @@ Fueron creadas bajo el paradigma OLTP (online transaccion processing). Aunque pu
 En el siguiente gráfico se puede observar una comparativa de diferentes tipos de BBDD orientadas a grafos, según procesamiento y almacenamiento subyacente:
 
 ![Processing vs Storage axis](./procesamiento-almacenamiento.jpg)
-
-
