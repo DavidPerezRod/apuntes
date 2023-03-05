@@ -1,8 +1,8 @@
 # The Data Dichotomy: Rethinking the Way We Treat Data and Services
 
-En términos generales, los microservicios suponen so solo una solución al mundo distribuido actual, sino a la propia organización empresarial con ámbitos funcionales distribuidos. Ésta no es una realidad nueva, pero los microservicios si suponen un avance en la forma de transmitir los datos entre ellas, ya que resulta más cohesionada a nivel tecnológico.
+En términos generales, los microservicios suponen no solo una solución al mundo distribuido actual, sino a la propia organización empresarial con ámbitos funcionales distribuidos. Ésta no es una realidad nueva, pero los microservicios si suponen un avance en la forma de transmitir los datos entre ellas, ya que resulta más cohesionada a nivel tecnológico.
 
-Los microservicios se pueden desplegar de forma independiente. Es este atributo, más que ningún otro, el que les da su valor, y que les permite escalar. No tanto en el sentido de escalar a cuatrillones de usuarios o petabytes de datos (aunque pueden ayudar en eso), sino más bien escalar en términos de personas, a medida que sus equipos y su organización crecen.
+Los microservicios se pueden desplegar de forma independiente. Es este atributo, más que ningún otro, el que les da su valor, y que les permite escalar. Escalar en ambos mundos, el de una población masiva de usuarios y los datos que generan, y escalar en términos empresariales, a medida que sus equipos y su organización crecen.
 
 **_Ventajas_**
 
@@ -24,7 +24,7 @@ Por un lado el a la hora de diseñar componentes de software se busca independen
 
 Sin embargo, por otro lado, el diseño de BBDD sigue unos principios completamente distintos, cuyo objetivo es exponer los datos.
 
-Estos dos objetivos contrapuestos, harán presión para que o bien el API de nuestros microservicios se amplíen para exponer más información y evitar cambios por requisitos de terceros, o bien se amplíe el dataset expuesto. Además toda esta problemática será directamente proporcional al volumen y complejidad de los datos "ocultos" por el microservicio.
+Estos dos objetivos contrapuestos, harán presión para que o bien el API de nuestros microservicios se amplíe para exponer más información y evitar cambios por requisitos de terceros, o bien se amplíe el dataset expuesto. Además toda esta problemática será directamente proporcional al volumen y complejidad de los datos "ocultos" por el microservicio.
 
 La consecuencia, es que generaremos sistemas con algo parecido a BBDD compartidas, que tienen retos operativos y de ingeniería significativos.
 
