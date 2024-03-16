@@ -2,6 +2,8 @@
 
 ## [Introducción](introduccion.md)
 
+## [Comandos] (comandos.md)
+
 ## [Creación de imágenes](creacion-imagenes.md)
 
 ## [Creación de contenedores](contenedores.md)
