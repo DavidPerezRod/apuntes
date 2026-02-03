@@ -1,3 +1,0 @@
-# ÍNDICE
-
-* [Introducción](./introduccion.md)

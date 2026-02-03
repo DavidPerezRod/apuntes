@@ -1,3 +1,0 @@
-# Indice
-
-## [Overview](./overview.md)
