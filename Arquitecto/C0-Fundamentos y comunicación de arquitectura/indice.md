@@ -1,0 +1,24 @@
+## Índice
+
+- [C0.1 Marco mental de arquitectura](C0.1%20Marco%20mental.md#c01)
+  - [C0.1.1 Definición operativa](C0.1%20Marco%20mental.md#c011)
+    - [C0.1.1.1 Arquitectura = decisiones significativas + estructura + trade-offs](C0.1%20Marco%20mental.md#c0111)
+      - [C0.1.1.1.1 Atributos de calidad como motor de decisiones (no "diagramas bonitos")](C0.1%20Marco%20mental.md#c01111)
+  - [C0.1.2 Tipos de decisiones](C0.1%20Marco%20mental.md#c012)
+    - [C0.1.2.1 Reversibles vs irreversibles](C0.1%20Marco%20mental.md#c0121)
+      - [C0.1.2.1.1 Criterios: coste de cambio, lock-in, impacto transversal](C0.1%20Marco%20mental.md#c01211)
+  - [C0.1.3 Restricciones y principios](C0.1%20Marco%20mental.md#c013)
+    - [C0.1.3.1 "Constraints first"](C0.1%20Marco%20mental.md#c0131)
+      - [C0.1.3.1.1 NFRs, compliance, platform, skillset, budget](C0.1%20Marco%20mental.md#c01311)
+- C0.2 Documentación mínima viable (y sostenible)
+  - C0.2.1 C4 como estándar práctico de diagramas
+    - C0.2.1.1 Context / Container / Component / Code
+      - C0.2.1.1.1 Qué pregunta responde cada nivel
+  - C0.2.2 arc42 como plantilla de comunicación
+    - C0.2.2.1 Secciones clave para no olvidar "lo importante"
+      - C0.2.2.1.1 Goals, constraints, quality, risks, decisions
+  - C0.2.3 ADRs para historial de decisiones
+    - C0.2.3.1 1 ADR = 1 decisión significativa
+      - C0.2.3.1.1 Plantilla: Context, Decision, Consequences
+- [Glosario de términos](glosario.md#glosario)
+- [Acrónimos](acronimos.md#acronimos)

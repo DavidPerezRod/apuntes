@@ -1,0 +1,1 @@
+/home/sorel/repos/software-instalado.md

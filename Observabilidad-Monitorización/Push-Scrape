@@ -1,0 +1,85 @@
+## Foundations of Observability: capas del sistema y qué medir en cada una
+
+Una forma práctica de aterrizar “observabilidad” es **pensar por capas**. Cada capa tiene *su* punto de vista del sistema, por lo que también tiene **métricas dominantes** y métodos recomendados. La regla es simple: cuanto más arriba estás, más cerca del **impacto de usuario**; cuanto más abajo, más cerca de **capacidad y recursos**.
+
+---
+
+### 1) UI Layer (experiencia de usuario)
+
+**Qué representa:** lo que el usuario percibe y experimenta: rendimiento real, errores en el cliente, disponibilidad “desde fuera”.
+
+**Qué preguntas debe responder:**
+- ¿La página/app es usable y rápida *para el usuario real*?
+- ¿Hay errores de ejecución (JS), fallos de carga de assets o problemas de red?
+- ¿La disponibilidad percibida coincide con la del backend?
+
+**Método recomendado:** **Core Web Vitals** (y señales UX complementarias)
+- **LCP**: percepción de carga del contenido principal.
+- **FID** (o equivalente moderno de “responsiveness”): capacidad de respuesta a la interacción.
+- **CLS**: estabilidad visual.
+- Complementos típicos: errores JS, fallos de recursos (JS/CSS), tiempos de API desde el navegador, disponibilidad sintética.
+
+**Notas prácticas:**
+- Esta capa es la que mejor captura “impacto”, pero suele necesitar segmentación (device, network, región) con cuidado de no explotar cardinalidad.
+- No sustituye a backend: te dice “duele”, no siempre “por qué”.
+
+---
+
+### 2) Service Layer (microservicios / APIs)
+
+**Qué representa:** el contrato de servicio: rutas críticas, transacciones, dependencias aguas abajo, degradación por carga y errores funcionales.
+
+**Qué preguntas debe responder:**
+- ¿Las operaciones críticas responden con éxito?
+- ¿Se cumplen los SLOs de latencia por endpoint/operación?
+- ¿Los errores vienen del servicio o de una dependencia?
+- ¿Se está quedando sin margen (colas/pools/conexiones)?
+
+**Método recomendado:** **Four Golden Signals (RED+S)**
+1) **Traffic** (Rate/Throughput): requests/s, mensajes/s, jobs/s.  
+2) **Errors**: ratio de fallos observables (5xx, timeouts, errores de negocio críticos).  
+3) **Latency** (Duration): p95/p99 por ruta crítica.  
+4) **Saturation**: backlog, pool exhaustion, conexiones, throttling.
+
+**Notas prácticas:**
+- **RED** es excelente para HTTP/gRPC, pero completa con **Saturation** (Golden Signals) para anticipar el “va a caer”.
+- En asíncrono (colas/eventos), “Traffic/Latency” se reinterpreta: throughput de consumo, lag/backlog, age-of-oldest-message, retries/DLQ.
+
+---
+
+### 3) Infrastructure Layer (plataforma y dependencias)
+
+**Qué representa:** recursos y componentes que sustentan el servicio: compute, red, almacenamiento, DB, cache, colas, balanceadores, etc.
+
+**Qué preguntas debe responder:**
+- ¿Hay recursos o componentes al límite?
+- ¿Existe contención o colas creciendo?
+- ¿Hay errores del recurso (IO, red, DB) que expliquen fallos arriba?
+
+**Método recomendado:** **USE Method**
+- **Utilization**: uso (CPU, memoria, IOPS, conexiones, QPS en DB).
+- **Saturation**: señales de contención/backpressure (CPU throttling, run queue, wait time, colas, locks).
+- **Errors**: fallos de recurso (timeouts, resets, errores de disco, errores DB).
+
+**Notas prácticas:**
+- USE aporta el “por qué” operativo de muchas degradaciones del service layer (latencia y errores por saturación).
+- Es clave para capacity planning y prevención.
+
+---
+
+### Relación entre capas: cómo se encadenan los síntomas
+
+- Un problema en **Infra** (saturación/errores) suele manifestarse en **Service** como aumento de **latencia** y luego **errores**.
+- El usuario lo nota en **UI** como peor **LCP/responsiveness**, fallos, o simplemente “no carga”.
+- Por eso, una buena monitorización no es “elegir un método”, sino **alinear métodos por capa** y enlazar dashboards/alertas para bajar de impacto a causa.
+
+---
+
+### Resumen en tabla
+
+| Capa | Objetivo | Método base | Señales dominantes |
+|---|---|---|---|
+| UI | Experiencia percibida | Core Web Vitals | LCP, responsiveness, CLS, errores JS, fallos de assets |
+| Service | Salud del contrato | Golden Signals (RED+S) | tráfico, errores, latencia p95/p99, saturación (colas/pools) |
+| Infra | Recursos y dependencias | USE | utilization, saturation, errors del recurso |
+
