@@ -2,16 +2,20 @@
 
 ## Introducción a la Observabilidad y su Importancia
 
-La **observabilidad** es la capacidad de comprender el estado de un sistema a partir de sus datos de salida. Permite inferir qué ocurre dentro de aplicaciones y servicios analizando **métricas**, **registros de eventos (logs)**, **trazas** y otras señales: en conjunto, su **telemetría**. Su objetivo es que los equipos puedan **operar el sistema de forma fiable** y verificar el **cumplimiento de los objetivos de nivel de servicio (SLO/SLI)**, facilitando la detección proactiva de problemas y el análisis de causa raíz, incluso en arquitecturas muy distribuidas.
+La **observabilidad** es la capacidad de comprender el estado de un sistema a partir de sus datos de salida.
+
+Su objetivo es que los equipos puedan **operar el sistema de forma fiable** y verificar el **cumplimiento de los objetivos de nivel de servicio (SLO/SLI)**, facilitando la detección proactiva de problemas y el análisis de causa raíz.
 
 
 ## Los Tres Pilares de la Observabilidad: Métricas, Logs y Trazas
 
-Tradicionalmente se habla de tres pilares fundamentales para lograr la observabilidad en sistemas distribuidos: métricas, logs y trazas (tracing). 
+Tradicionalmente se habla de tres pilares fundamentales para lograr la observabilidad en sistemas distribuidos. Cada pilar representa un tipo de datos de telemetría que aporta una perspectiva complementaria sobre el comportamiento del sistema:
 
-Cada pilar representa un tipo de datos de telemetría que aporta una perspectiva complementaria sobre el comportamiento del sistema: **métricas** para detectar tendencias y degradaciones, **logs** para entender qué ocurrió con detalle, y **trazas** para localizar dónde se consume el tiempo y cómo se encadenan las dependencias en un flujo distribuido. 
+* **métricas** para detectar tendencias y degradaciones
+* **logs** para entender qué ocurrió con detalle
+* **trazas** para localizar dónde se consume el tiempo y cómo se encadenan las dependencias en un flujo distribuido. 
 
-En la práctica, lo más eficaz es poder **correlacionarlos** (por ejemplo, enlazar desde una métrica anómala a las trazas afectadas y, desde una traza concreta, a los logs asociados por `traceId`).
+Regla práctica: **métricas** te indican *que hay un problema*, **trazas** suelen decirte *dónde está*, y **logs** te permiten confirmar *qué pasó* con el máximo detalle. 
 
 | Pilar | Qué | Cuándo | Ejemplos |
 |------|-----|--------|----------|
@@ -19,7 +23,7 @@ En la práctica, lo más eficaz es poder **correlacionarlos** (por ejemplo, enla
 | **Logs** | “¿Qué pasó exactamente?” | Diagnóstico, auditoría, análisis forense | errores con stacktrace, eventos de negocio |
 | **Trazas** | “¿Dónde se fue el tiempo y quién llamó a quién?” | Cuellos de botella, dependencias, RCA | spans por servicio, latencias por dependencia |
 
-Regla práctica: **métricas** te indican *que hay un problema*, **trazas** suelen decirte *dónde está*, y **logs** te permiten confirmar *qué pasó* con el máximo detalle.
+El ecosistema de aplicaciones, así como la progagación de datos se refleja en el siguiente diagrama:
 
 
 ![alt text](image.png)
@@ -27,142 +31,26 @@ Regla práctica: **métricas** te indican *que hay un problema*, **trazas** suel
 ## Pilar 1 — Métricas
 
 ### Qué es
-Las **métricas** son medidas numéricas del comportamiento de un sistema a lo largo del tiempo (por ejemplo, latencia, tasa de errores, consumo de recursos). Se registran como **series temporales** y permiten agregación y consulta eficiente para análisis y operación.
+Las métricas son valores numéricos que se registran de forma continua para entender cómo se comporta un sistema a lo largo del tiempo. Por ejemplo, cuánto tarda en responder, cuántos errores devuelve o cuánta CPU y memoria consume. En lugar de ser eventos sueltos, quedan guardadas como una serie temporal de valores, lo que permite consultarlas y agregarlas (sumar, promediar, agrupar por servicio, etc.) de forma eficiente para analizar la evolución y gestionar el sistema en producción: detectar degradaciones, observar patrones, planificar capacidad y automatizar alertas.
 
-### Para qué sirve
-Las métricas proporcionan una **vista panorámica** de la salud del sistema: permiten detectar degradaciones, observar tendencias, planificar capacidad y automatizar alertas. Son el punto de entrada típico para responder a “¿va bien o va mal?” y decidir dónde investigar con más detalle (trazas/logs).
+Son el punto de entrada típico para responder a “¿va bien o va mal?” y decidir dónde investigar con más detalle (trazas/logs) basándonos en:
+* latencia
+* errores
+* recursos
+* capacidad
+* alertas
 
-### Buenas prácticas
+### [Buenas Pŕacticas](./metricas/metricas-buenas-practicas.md)
 
-1. **Qué medir (mínimo por servicio)**
-   La idea es cubrir un “mínimo viable” que te permita detectar degradaciones con rapidez y, sobre todo, saber *dónde mirar* cuando algo va mal. Si no hay un criterio, se acaba midiendo demasiado o midiendo cosas que no sirven para operar.
-
-   - **Golden Signals**
-     Son cuatro categorías que, si están bien cubiertas, suelen explicar la mayoría de incidentes operativos:
-
-     - **Latencia (p. ej. p95/p99)**
-       Mide *qué tan rápido responde* el servicio. Es preferible usar percentiles (p95/p99) y no solo promedio, porque el promedio oculta colas y outliers.
-       - Ejemplos: `http.server.requests` p95/p99, latencia de una query a DB, latencia de un proveedor externo.
-
-     - **Tráfico/throughput (RPS, mensajes/s)**
-       Mide *cuánta carga está absorbiendo* el servicio.
-       - Ejemplos: requests por segundo, mensajes consumidos por segundo, operaciones de negocio por minuto (p. ej. “pagos confirmados/min”).
-
-     - **Errores (ratio 4xx/5xx, timeouts, fallos lógicos)**
-       Mide *cuántas operaciones fallan* y, si es posible, *por qué tipo*.
-       - Técnicos: 5xx, excepciones, timeouts, fallos de DB, circuit breaker abierto.
-       - De negocio: validaciones, “saldo insuficiente”, “OTP inválido” (esto no siempre es incidente; depende del SLO/impacto).
-
-     - **Saturación**
-       Mide *qué tan cerca estás del límite* (cuando te acercas, la latencia y los errores suelen subir).
-       - **CPU**: si la CPU se sostiene alta, aumentan colas y latencia.
-       - **Memoria**: presión de heap, GC, OOM; cuidado con “memoria libre” como única señal.
-       - **Red / I/O**: ancho de banda, errores de red, latencia de red, I/O wait.
-       - **Pools y colas**: thread pools, conexiones DB, colas en brokers, backlog en consumidores, etc.
-
-2. **Instrumentación**
-   La instrumentación es “hacer observable” el servicio: exponer métricas consistentes y comparables entre servicios.
-
-   - Instrumentación automática del framework (HTTP server/client, DB, colas) + instrumentación manual para métricas de negocio.
-   - Exposición mediante endpoint (por ejemplo `/metrics` o `/actuator/prometheus`) o exportación vía collector.
-   - En Spring, típicamente con **Micrometer**; y a partir de ahí exportación a Prometheus u OpenTelemetry.
-
-3. **Modelo dimensional (tags) y cardinalidad**
-   Una métrica sin dimensiones suele ser poco útil; con demasiadas dimensiones, destruye el sistema de métricas.
-
-   - Etiquetar con dimensiones útiles (baja cardinalidad): `service`, `env`, `region`, `cluster`, `namespace`, `method`, `status`, `route` normalizado.
-   - Evitar cardinalidad alta (`userId`, `orderId`, `ip`, `email`, `documentUuid`): aumenta series únicas, degrada rendimiento y eleva costes.
-   - Si necesitas visibilidad por entidad, suele pertenecer a **logs** o **trazas**, no a métricas.
-
-
-### Antipatrones (métricas)
-
-Esta sección complementa las buenas prácticas anteriores. El objetivo es identificar patrones que degradan la observabilidad en producción porque: 
-- Generan ruido
-- Elevan costes
-- Esconden problemas reales
-
-### A1) “Medirlo todo” sin una pregunta operativa
-- **Qué es**: instrumentar cientos/miles de métricas por servicio “por si acaso”, sin relación con decisiones operativas.
-- **Impacto**: dashboards inabarcables, nadie sabe qué mirar en un incidente, costes y complejidad innecesarios.
-- **Señales**: métricas que nadie consulta; paneles abandonados; alertas que nunca se atienden.
-- **Corrección**: empezar por **[Golden Signals](../glosario.md#golden-signals "Métricas sobre aspectos esenciales") +  [SLIs](../acronimos.md#sli "Service Level Indicator") de negocio**; cada nueva métrica debe responder a una pregunta (“¿qué decisión tomaré si cambia?”).
-
-### A2) Cardinalidad descontrolada (tags explosivos)
-- **Qué es**: etiquetas con valores prácticamente únicos (p. ej. `userId`, `orderId`, `documentUuid`, `ip`, `email`, `sessionId`).
-- **Impacto**: explosión de series temporales, saturación del [TSDB](../acronimos.md#tsdb "Time Series Database"), que generan consultas lentas y caras por consumo elevado de RAM.
-- **Señales**: crecimiento acelerado de series que generan [OOM](../acronimos.md#oom "Out of memory"), consultas [PromQL](../acronimos.md#promql "Prometheus Query Language") lentas; costes inesperados (en SaaS).
-- **Corrección**: mantener tags **de baja cardinalidad** (`service`, `env`, `region`, `status`, `method`, `route` normalizado).
-
-### A3) Etiquetar endpoints “crudos” (paths con IDs embebidos)
-- **Qué es**: usar el path real como etiqueta (`/users/123/orders/987`) o como nombre de métrica.
-- **Impacto**: cardinalidad alta y métricas inútiles para agregación.
-- **Señales**: miles de rutas distintas en dashboards; paneles que no agregan bien.
-- **Corrección**: usar `route`/plantillas (`/users/{id}/orders/{id}`) o mecanismos del framework que normalizan rutas.
-
-### A4) Latencia solo como promedio (avg)
-- **Qué es**: monitorizar “latencia media” como señal principal.
-- **Impacto**: se esconden colas y [outliers](../glosario.md#outlier "Valores atípicos").
-- **Señales**: incidentes con quejas de “va lento” sin correlación con el promedio.
-- **Corrección**: usar **p95/p99** y/o **histogramas** y separar latencia por tipo (HTTP, DB, proveedor externo).
-
-### A5) Mezclar 4xx, 5xx y “errores de negocio” en el mismo saco
-- **Qué es**: un único contador de “errores” sin distinguir causa ni impacto.
-- **Impacto**: alertas por eventos esperables (401/403), o invisibilidad de fallos técnicos dentro del ruido.
-- **Señales**: alertas frecuentes sin incidentes reales; métricas de error altas “siempre”.
-- **Corrección**:
-  - **Técnico**: 5xx, timeouts, exceptions, circuit breaker → alertable.
-  - **Cliente**: 4xx → suele ser informativo (depende del caso).
-  - **Negocio**: rechazos/validaciones → SLIs específicos, no “incidente” por defecto.
-
-### A6) Métricas incompletas: solo server-side (sin dependencias)
-- **Qué es**: métricas del servicio sin métricas de sus llamadas a DB, brokers, o servicios upstream.
-- **Impacto**: no se identifica la causa (p. ej. un tercero lento) y se culpa al componente equivocado.
-- **Señales**: latencia/errores suben sin explicación interna.
-- **Corrección**: métricas de **client-side** (latencia/errores hacia DB/HTTP/broker), y panel “dependencias” en cada dashboard de servicio.
-
-
-### A7) Métricas inconsistentes por naming y semántica
-- **Qué es**: cada equipo nombra distinto lo mismo; contadores que a veces son gauges; unidades inconsistentes.
-- **Impacto**: imposible comparar servicios; PromQL complejo; errores de interpretación.
-- **Señales**: consultas diferentes para lo mismo; dashboards no reutilizables.
-- **Corrección**: convención mínima:
-  - **Unidades** explícitas (ms/s/bytes),
-  - **Counters** monotónicos para “totales”, **gauges** para estado, **histogramas** para latencia,
-  - reutilizar métricas estándar (HTTP/JVM/DB) y documentar las de negocio.
-
-### A8) Instrumentación manual costosa o con side effects
-- **Qué es**: calcular métricas realizando queries pesadas “en cada scrape” o en paths de alta frecuencia.
-- **Impacto**: la observabilidad degrada el sistema; latencia extra y efectos en cascada.
-- **Señales**: picos de CPU coinciden con scrape; latencia aumenta al habilitar métricas.
-- **Corrección**: métricas deben ser **baratas**:
-  - usar contadores/gauges actualizados en memoria,
-  - evitar consultas a DB solo para “pintar un número”.
-
-### A9) Exposición insegura de endpoints de métricas
-- **Qué es**: dejar `/actuator/prometheus` o equivalentes accesibles públicamente.
-- **Impacto**: fuga de información (topología, rutas, estados), riesgo de seguridad.
-- **Señales**: endpoints accesibles desde fuera del cluster; ausencia de controles de red.
-- **Corrección**: restringir por red (cluster-only), auth si aplica, y separar health público vs métricas privadas.
-
+### [Antipatrones](./metricas/metricas-antipatrones.md)
 
 ### Herramientas / implementación típica (generación de métricas)
 
-- **Micrometer (JVM/Spring)**: API de instrumentación; aporta métricas estándar (HTTP, JVM) y permite métricas de negocio.
+- **Micrometer (JVM/Spring)**: API de instrumentación; aporta métricas estándar (HTTP, JVM) y permite métricas de negocio. [Más aquí](./metricas/metricas-micrometer.md)
 - **OpenTelemetry Metrics**: estándar multi-lenguaje para instrumentación; exportación vía OTLP.
 - **Exposición**:
   - Formato Prometheus (endpoint HTTP) o exportación OTLP a un collector.
   - En Spring Boot: Actuator + registry correspondiente (p. ej. Prometheus registry).
-
-### Resumen / checklist (métricas)
-- [ ] Cada servicio expone Golden Signals (latencia p95/p99, tráfico, errores, saturación).
-- [ ] Latencia medida con percentiles/histogramas (no solo promedio).
-- [ ] Tags de baja cardinalidad; prohibidos IDs únicos (`userId`, `orderId`, etc.).
-- [ ] Endpoints normalizados (`route`), no paths crudos con IDs.
-- [ ] Métricas de negocio mínimas (SLIs clave) diferenciadas de errores técnicos.
-- [ ] Exposición barata (sin queries pesadas en scrape).
-- [ ] Naming/unidades consistentes (ms, bytes, etc.).
-- [ ] Existe enlace/correlación con traceId en logs/trazas (si aplica).
 
 ### Deep-dive Métricas
 

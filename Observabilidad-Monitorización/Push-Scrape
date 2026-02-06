@@ -1,85 +1,98 @@
-## Foundations of Observability: capas del sistema y qué medir en cada una
+## Push vs Scrape en monitorización: qué son, trade-offs y tooling
 
-Una forma práctica de aterrizar “observabilidad” es **pensar por capas**. Cada capa tiene *su* punto de vista del sistema, por lo que también tiene **métricas dominantes** y métodos recomendados. La regla es simple: cuanto más arriba estás, más cerca del **impacto de usuario**; cuanto más abajo, más cerca de **capacidad y recursos**.
-
----
-
-### 1) UI Layer (experiencia de usuario)
-
-**Qué representa:** lo que el usuario percibe y experimenta: rendimiento real, errores en el cliente, disponibilidad “desde fuera”.
-
-**Qué preguntas debe responder:**
-- ¿La página/app es usable y rápida *para el usuario real*?
-- ¿Hay errores de ejecución (JS), fallos de carga de assets o problemas de red?
-- ¿La disponibilidad percibida coincide con la del backend?
-
-**Método recomendado:** **Core Web Vitals** (y señales UX complementarias)
-- **LCP**: percepción de carga del contenido principal.
-- **FID** (o equivalente moderno de “responsiveness”): capacidad de respuesta a la interacción.
-- **CLS**: estabilidad visual.
-- Complementos típicos: errores JS, fallos de recursos (JS/CSS), tiempos de API desde el navegador, disponibilidad sintética.
-
-**Notas prácticas:**
-- Esta capa es la que mejor captura “impacto”, pero suele necesitar segmentación (device, network, región) con cuidado de no explotar cardinalidad.
-- No sustituye a backend: te dice “duele”, no siempre “por qué”.
+En monitorización basada en métricas hay dos patrones dominantes para **recoger** datos: **scrape (pull)** y **push**. No es una discusión académica: el método condiciona seguridad, fiabilidad, cardinalidad, operación y coste.
 
 ---
 
-### 2) Service Layer (microservicios / APIs)
+### 1) Scrape (pull): el recolector “tira” de los targets
 
-**Qué representa:** el contrato de servicio: rutas críticas, transacciones, dependencias aguas abajo, degradación por carga y errores funcionales.
+**Qué es**  
+Un sistema central (collector/TSDB) **consulta periódicamente** a cada target para leer sus métricas, típicamente vía HTTP (por ejemplo `/metrics`). El target expone un endpoint; el collector decide “cuándo” y “a quién” preguntar.
 
-**Qué preguntas debe responder:**
-- ¿Las operaciones críticas responden con éxito?
-- ¿Se cumplen los SLOs de latencia por endpoint/operación?
-- ¿Los errores vienen del servicio o de una dependencia?
-- ¿Se está quedando sin margen (colas/pools/conexiones)?
+**Ventajas**
+- **Control central del muestreo**: intervalos, timeouts, targets; cambios sin redeploy de apps.
+- **Descubrimiento y etiquetado**: fácil integrar service discovery (Kubernetes, Consul) y aplicar labels coherentes.
+- **Resiliencia “natural”**: si el collector cae, los targets no se enteran; cuando vuelve, reanuda scrapes.
+- **Seguridad más sencilla en entornos internos**: el tráfico suele ir “hacia dentro” (collector → target) dentro de la red de cluster.
+- **Modelo muy probado**: especialmente en cloud-native.
 
-**Método recomendado:** **Four Golden Signals (RED+S)**
-1) **Traffic** (Rate/Throughput): requests/s, mensajes/s, jobs/s.  
-2) **Errors**: ratio de fallos observables (5xx, timeouts, errores de negocio críticos).  
-3) **Latency** (Duration): p95/p99 por ruta crítica.  
-4) **Saturation**: backlog, pool exhaustion, conexiones, throttling.
+**Inconvenientes**
+- **NAT / redes no accesibles**: targets que no se pueden alcanzar desde el collector (laptops, edge, entornos aislados).
+- **Targets efímeros**: jobs cortos pueden terminar antes del siguiente scrape ⇒ pérdida si no hay estrategia.
+- **Exposición de endpoints**: hay que publicar `/metrics` y controlar auth/red (mTLS, network policies).
+- **Escalabilidad de scrapes**: muchos targets y alta cardinalidad exigen planificación (sharding/federation/remote write).
 
-**Notas prácticas:**
-- **RED** es excelente para HTTP/gRPC, pero completa con **Saturation** (Golden Signals) para anticipar el “va a caer”.
-- En asíncrono (colas/eventos), “Traffic/Latency” se reinterpreta: throughput de consumo, lag/backlog, age-of-oldest-message, retries/DLQ.
+**Cuándo es recomendable**
+- Microservicios “always-on” en Kubernetes/VMs donde el collector puede alcanzar los pods/nodos.
+- Cuando quieres operación simple y consistente (SD, labels, gobernanza central).
+- Cuando necesitas una base sólida para alertas y SLOs con baja fricción.
 
----
-
-### 3) Infrastructure Layer (plataforma y dependencias)
-
-**Qué representa:** recursos y componentes que sustentan el servicio: compute, red, almacenamiento, DB, cache, colas, balanceadores, etc.
-
-**Qué preguntas debe responder:**
-- ¿Hay recursos o componentes al límite?
-- ¿Existe contención o colas creciendo?
-- ¿Hay errores del recurso (IO, red, DB) que expliquen fallos arriba?
-
-**Método recomendado:** **USE Method**
-- **Utilization**: uso (CPU, memoria, IOPS, conexiones, QPS en DB).
-- **Saturation**: señales de contención/backpressure (CPU throttling, run queue, wait time, colas, locks).
-- **Errors**: fallos de recurso (timeouts, resets, errores de disco, errores DB).
-
-**Notas prácticas:**
-- USE aporta el “por qué” operativo de muchas degradaciones del service layer (latencia y errores por saturación).
-- Es clave para capacity planning y prevención.
+**Herramientas típicas (ecosistema scrape)**
+- **Prometheus** (scrape + TSDB + alerting clásico).
+- **VictoriaMetrics** (compatible con formato Prometheus; puede hacer scrape y/o remote write).
+- **OpenTelemetry Collector** (puede scrapear en ciertos casos y/o recibir y exportar; suele convivir con Prometheus).
+- Descubrimiento/operación: **kube-state-metrics**, **node_exporter**, **cAdvisor**, **blackbox_exporter**.
 
 ---
 
-### Relación entre capas: cómo se encadenan los síntomas
+### 2) Push: el productor “empuja” métricas a un endpoint
 
-- Un problema en **Infra** (saturación/errores) suele manifestarse en **Service** como aumento de **latencia** y luego **errores**.
-- El usuario lo nota en **UI** como peor **LCP/responsiveness**, fallos, o simplemente “no carga”.
-- Por eso, una buena monitorización no es “elegir un método”, sino **alinear métodos por capa** y enlazar dashboards/alertas para bajar de impacto a causa.
+**Qué es**  
+La aplicación o un agente **envía** métricas a un receptor (gateway/collector). El productor decide “cuándo” emite (o lo hace un sidecar/agent).
+
+Hay dos sabores comunes:
+- **Push directo a un collector** (métricas/series llegan por protocolo o HTTP).
+- **Push a un gateway intermedio** (buffer/puente) para luego ser scrapeado.
+
+**Ventajas**
+- **Funciona detrás de NAT / redes cerradas**: el productor solo necesita salida hacia el receptor.
+- **Encaja con batch/cron/jobs cortos**: el job puede empujar al terminar, sin depender del tick del scrape.
+- **Menos necesidad de exponer `/metrics`** públicamente (aunque el receptor sí debe estar expuesto a los productores).
+
+**Inconvenientes**
+- **Complejidad operativa**: retries, backoff, buffering, colas, límites; la lógica de entrega aparece.
+- **Riesgo de duplicados / out-of-order**: requiere cuidado si hay reintentos o múltiples instancias.
+- **Semántica de “staleness”**: si un productor muere, el receptor puede quedarse con métricas “viejas” si no hay expiración.
+- **Gobernanza de labels más difícil**: los productores pueden enviar etiquetas inconsistentes (cardinalidad explosiva).
+- **Backpressure**: en incidentes, los productores pueden saturar el receptor si no hay límites.
+
+**Cuándo es recomendable**
+- Entornos donde el collector **no puede** alcanzar los targets (edge, on-prem aislado, dispositivos).
+- **Workloads efímeros** (batch/cron) donde perder una ejecución sería crítico.
+- Casos donde quieres desacoplar recolección y red (agentes que acumulan y envían).
+
+**Herramientas típicas (ecosistema push)**
+- **Prometheus Pushgateway** (especialmente para jobs efímeros; ojo: no sustituye a Prometheus, es un puente).
+- **StatsD/Graphite** (push UDP/TCP a agregador; clásico, menos orientado a labels modernas).
+- **Telegraf + InfluxDB** (Telegraf recoge y empuja; Influx soporta push/pull según input plugins).
+- **OpenTelemetry SDK + OTel Collector** (apps exportan métricas al collector por OTLP; el collector reexporta a TSDB).
+- Agentes/forwarders: **Datadog Agent**, **New Relic Infrastructure Agent**, **Elastic Agent** (modelos push/agent-managed).
 
 ---
 
-### Resumen en tabla
+### 3) Recomendación práctica: “pull por defecto, push por excepción bien justificada”
 
-| Capa | Objetivo | Método base | Señales dominantes |
-|---|---|---|---|
-| UI | Experiencia percibida | Core Web Vitals | LCP, responsiveness, CLS, errores JS, fallos de assets |
-| Service | Salud del contrato | Golden Signals (RED+S) | tráfico, errores, latencia p95/p99, saturación (colas/pools) |
-| Infra | Recursos y dependencias | USE | utilization, saturation, errors del recurso |
+**Regla operativa útil**
+- Si el servicio es **long-running** y estás en un entorno donde puedes hacer SD: **Scrape (pull)**.
+- Si el workload es **efímero** o el target es **inalcanzable** desde el collector: **Push** (idealmente a un collector/agent con control de labels y expiración).
+
+**Patrón híbrido típico**
+- **Prometheus scrape** para servicios y exporters del cluster.
+- **Pushgateway** solo para batch/cron con métricas de “resultado de job”.
+- **OTel Collector** para unificar pipelines (logs/traces/metrics) y hacer fan-out a distintos backends.
+
+---
+
+### 4) Tabla comparativa rápida
+
+| Criterio | Scrape (pull) | Push |
+|---|---|---|
+| Quién inicia | Collector | Productor/agent |
+| Mejor para | Servicios persistentes | Jobs efímeros / targets no alcanzables |
+| Descubrimiento | Muy natural (K8s/Consul) | Más manual, depende del agente |
+| Gobernanza de labels | Centralizable | Más riesgo de inconsistencia |
+| NAT / redes cerradas | Complicado | Natural |
+| Operación bajo caída del backend | Simple (reanuda scrapes) | Reintentos/buffering necesarios |
+| Riesgo de métricas “zombie” | Bajo (staleness gestionado por scrape) | Más alto si no hay expiración/TTL |
+| Complejidad | Menor | Mayor |
 

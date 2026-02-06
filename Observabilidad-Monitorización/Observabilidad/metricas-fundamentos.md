@@ -38,6 +38,15 @@ Reglas prácticas:
   - trazas + filtros,
   - o métricas de negocio con dimensiones controladas (catálogos cerrados).
 
+```mermaid
+xychart-beta
+  title "Series temporales creadas (cardinalidad) en el tiempo"
+  x-axis "t" ["día 1","día 2","día 3","día 4","día 5"]
+  y-axis "nº de series" 0 --> 100000
+  line "labels controlados (env,service,route...)" [200,210,220,230,240]
+  line "label peligroso (userId)" [5000,20000,45000,80000,100000]
+```
+
 
 ## Contadores (Counter)
 
@@ -47,6 +56,15 @@ Un **contador** es una métrica acumulativa monótona que representa un valor nu
 - Número de solicitudes atendidas por un servicio.
 - Número de tareas completadas.
 - Número de errores ocurridos desde el arranque.
+
+
+```mermaid
+xychart-beta
+  title "Counter (requests_total): acumulado"
+  x-axis "t" ["12:00","12:01","12:02","12:03","12:04","12:05"]
+  y-axis "total" 0 --> 600
+  line "requests_total" [0,120,240,360,480,600]
+```
 
 ### Cómo interpretarlo
 
@@ -81,6 +99,15 @@ Un **gauge** representa un valor numérico en un instante dado, el cual **puede 
 - Longitud de una cola.
 - Conexiones activas en un pool.
 
+```mermaid
+xychart-beta
+  title "Gauge (queue_depth): backlog variable"
+  x-axis "t" ["12:00","12:01","12:02","12:03","12:04","12:05"]
+  y-axis "msgs" 0 --> 50
+  line "queue_depth" [2,5,12,40,18,6]
+```
+
+
 ### Cómo interpretarlo
 
 Es un **snapshot**: su valor en cada punto es el estado actual. En series temporales importan picos, valles y valores sostenidos cerca de límites (saturación).
@@ -111,6 +138,15 @@ Un **histograma** permite observar la **distribución de valores**: agrega obser
 - `_count` (número total de observaciones),
 - `_sum` (suma total de valores observados).
 
+```mermaid
+xychart-beta
+  title "Latencia: p50 vs p95 vs p99 (tail latency)"
+  x-axis "t" ["12:00","12:01","12:02","12:03","12:04","12:05"]
+  y-axis "ms" 0 --> 1200
+  line "p50" [80,85,90,95,90,85]
+  line "p95" [180,190,220,300,260,210]
+  line "p99" [300,320,450,1100,700,420]
+```
 **Ejemplos típicos**
 - Latencia de respuesta HTTP / duración de operaciones.
 - Tamaño de payloads.
@@ -205,6 +241,15 @@ Las “cuatro señales doradas” (SRE) suelen mapear así:
 - **Errores**: counters (errores totales) y derivación a error rate/ratio.
 - **Saturación**: gauges (CPU, memoria, colas, pools, etc.).
 - **Tráfico**: counters (solicitudes totales) y derivación a RPS/throughput.
+
+```mermaid
+xychart-beta
+  title "Error rate: 5xx (rate) vs éxito (2xx)"
+  x-axis "t" ["12:00","12:01","12:02","12:03","12:04","12:05"]
+  y-axis "req/s" 0 --> 12
+  line "2xx rate" [10,10,9,8,10,10]
+  line "5xx rate" [0.1,0.2,0.5,2.5,0.8,0.2]
+```
 
 Tabla de referencia:
 

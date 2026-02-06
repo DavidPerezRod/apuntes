@@ -1,28 +1,29 @@
-## Tooling: Micrometer (instrumentación en Java/Spring)
+# Micrometer: instrumentación en Java/Spring
 
-Micrometer es la **fachada (vendor-neutral)** estándar en el ecosistema Java/Spring para **definir y registrar métricas** sin acoplarte a un backend concreto (Prometheus, Datadog, New Relic, CloudWatch, etc.). Tu código emite *meters* (Counter, Timer, Gauge, …) contra un `MeterRegistry`, y el **registry** se encarga de “publicar/exportar” al sistema de monitorización.
+Micrometer es la **fachada (vendor-neutral)** estándar en el ecosistema Java/Spring para **definir y registrar métricas** sin acoplarte a un backend concreto (Prometheus, Datadog, New Relic, CloudWatch, etc.). 
+La aplicaicón emite *meters* (Counter, Timer, Gauge, …) contra un `MeterRegistry`, y el **registry** se encarga de “publicar/exportar” al sistema de monitorización.
 
-### Cómo encaja con las 3 características de un sistema de métricas
+### Las 3 características de un sistema de métricas
 
-- **Dimensionality (dimensionalidad)**: en Micrometer una métrica se identifica por **nombre + tags** (tags = labels/dimensiones).
-- **Rate aggregation (agregación por tasa)**: Micrometer emite *counters* y *timers*; la **tasa** (`rate`) y agregaciones se calculan **en el backend** (Prometheus/Grafana, Datadog, etc.), no en el código.
-- **Publishing (publicación)**: se realiza a través del `MeterRegistry` concreto (p. ej. `PrometheusMeterRegistry`) y el endpoint de scrape (`/actuator/prometheus`) o el mecanismo de export correspondiente (push/pull según backend).
+- **Dimensionality**: en Micrometer una métrica se identifica por **nombre + tags** (tags = labels/dimensiones).
+- **Rate aggregation (agregación por tasa)**: Micrometer emite *counters* y *timers*. El ratio de éstas se calcula en el backend (Prometheus/Grafana, Datadog, etc.).
+- **Publishing**: se realiza a través del `MeterRegistry` concreto (p. ej. `PrometheusMeterRegistry`) y el endpoint de scrape (`/actuator/prometheus`) o el mecanismo de export correspondiente (push/pull según backend).
 
 
-## 1) Conceptos clave
+### Conceptos clave
 
-### `MeterRegistry`
+#### `MeterRegistry`
 
-- Es el **punto de entrada** donde el servicio **registra** y **actualiza** métricas.
-- En Spring Boot, lo normal es **inyectarlo** (DI) en servicios/componentes para instrumentar sin estado global.
-- En tests o local “sin backend”, se puede usar `SimpleMeterRegistry` para validar que tus counters/timers/gauges se crean y evolucionan.
+- Es la **punto de entrada** donde el servicio **registra** y **actualiza** métricas.
+- En Spring Boot, lo normal es inyectarlo en servicios/componentes para instrumentar sin estado global.
+- En tests o local “sin backend”, se puede usar `SimpleMeterRegistry` para validar que los counters/timers/gauges se crean y evolucionan.
 
-### `Metrics.globalRegistry`
+#### `Metrics.globalRegistry`
 
-Es un **registro global y estático** (singleton) donde puedes registrar meters sin tener una referencia explícita a un `MeterRegistry`.
+Es un **registro global y estático** donde se pueden registrar meters sin tener una referencia explícita a un `MeterRegistry`.
 
-- Internamente suele ser un **`CompositeMeterRegistry`** (ver apartado específico), es decir: un “contenedor” que puede delegar en uno o varios registries reales (Prometheus, Datadog, etc.).
-- Su utilidad es cubrir escenarios donde **no se tiene DI** o no se dispone de un registry accesible:
+- Internamente suele ser un [**`CompositeMeterRegistry`**](#compositemeterregistry), es decir: un “contenedor” que puede delegar en uno o varios registries reales (Prometheus, Datadog, etc.).
+- Su utilidad es cubrir escenarios donde no se inyección de dependencias o no se dispone de un registry accesible:
   - librerías reutilizables que no dependen de Spring,
   - código muy genérico/estático,
   - utilidades inicializadas fuera del ciclo de vida del contenedor,
@@ -38,11 +39,33 @@ Es un **registro global y estático** (singleton) donde puedes registrar meters 
 - **Control explícito del wiring**: registry alineado con `commonTags`, `MeterFilter`, lifecycle y backend configurado.
 - **Menos acoplamiento oculto**: la dependencia queda visible en el constructor, lo que mejora mantenibilidad y gobierno de instrumentación.
 
-### Ejemplo típico (inyección por constructor)
+#### Ejemplo
 
 ~~~java
+import io.micrometer.core.instrument.MeterRegistry;
+import org.springframework.stereotype.Service;
+
 @Service
 public class PaymentService {
+
+    private static final String METRIC = "business.operations.total";
+    private static final String TAG_OPERATION = "operation";
+
+    public enum Operation {
+        PAYMENT_CONFIRM("payment_confirm"),
+        PAYMENT_CANCEL("payment_cancel"),
+        PAYMENT_REFUND("payment_refund");
+
+        private final String value;
+
+        Operation(String value) {
+            this.value = value;
+        }
+
+        public String value() {
+            return value;
+        }
+    }
 
     private final MeterRegistry meterRegistry;
 
@@ -50,42 +73,49 @@ public class PaymentService {
         this.meterRegistry = meterRegistry;
     }
 
-    public void doWork() {
-        meterRegistry.counter("business.operations", "operation", "payment_confirm")
+    private void increment(Operation op) {
+        meterRegistry.counter(METRIC, TAG_OPERATION, op.value())
                      .increment();
     }
+
+    public void confirmPayment() { increment(Operation.PAYMENT_CONFIRM); }
+    public void cancelPayment()  { increment(Operation.PAYMENT_CANCEL); }
+    public void refundPayment()  { increment(Operation.PAYMENT_REFUND); }
 }
 ~~~
+
+El TAG_OPERATION actúa como “tipo/category”:
+
+* Nombre de la métrica (business.operations.total) define qué está contando en general.
+* El tag key (operation) define por qué criterio se está partiendo en subgrupos.
+* El tag value (payment_confirm, payment_cancel, …) es la categoría concreta.
 
 ### `CompositeMeterRegistry`
 
 `CompositeMeterRegistry` es un `MeterRegistry` que **no exporta por sí mismo** a un backend concreto. Su función es **agregar** (componer) varios registries “reales” y **delegar** en todos ellos.
 
-### Qué resuelve (y por qué existe)
+### Para qué sirve
 
 - **Multi-backend**: publicar la misma métrica en más de un sistema (p. ej. Prometheus + OTLP/Datadog) sin duplicar instrumentación.
 - **Migraciones**: mantener dos backends a la vez durante un periodo de transición.
 - **Librerías**: permitir que una librería registre métricas sin saber a qué backend final irán; el consumidor decide qué registries se conectan.
 
-### Cómo funciona (modelo mental)
+Este enfoque tiene sentido cuando se está en una migración controlada, cuando existe necesidad real de soportar varios backends de observabilidad, o cuando la plataforma opera deliberadamente con una observabilidad “dual” (por ejemplo, enviando señales a dos destinos por razones de transición o estrategia). En cambio, no debería adoptarse por defecto: si solo necesitas se necesita un backend, mantener un único *registry* reduce complejidad operativa, minimiza puntos de fallo y suele abaratar el coste total.
 
-- Tu código registra un meter **una sola vez** (por nombre + tags).
-- El composite mantiene ese “catálogo” de meters y **lo replica**/delegará sobre cada registry conectado.
-- Cuando incrementas un counter o registras un timer, el composite propaga la actualización a todos los registries miembros.
 
-### Trade-offs / riesgos operativos
+### Cómo funciona
+
+- Se registra un meter **una sola vez** (por nombre + tags).
+- El composite propaga la actualización a todos los registries de su catálogo.
+
+### Trade-offs
 
 - **Coste multiplicado**: publicar a N backends implica *N veces* almacenamiento/ingesta/consulta (y posibles cuotas/costes).
 - **Semánticas divergentes**: no todos los backends representan igual histogramas/percentiles; el mismo meter puede verse distinto.
-- **Orden de inicialización**: si conectas registries tarde, puedes perder contexto o crear inconsistencias (depende del patrón de creación/registro).
-- **Duplicación accidental**: incluir sin querer dos exporters puede generar publicación doble (y confusión en dashboards).
+- **Orden de inicialización**: si un egistry se conecta tarde, se puede perder contexto o crear inconsistencias
+- **Duplicación accidental**: incluir sin querer dos exporters puede generar publicación doble
 
-### Cuándo usarlo (regla práctica)
-
-- **Sí**: migración controlada, necesidades multi-backend justificadas, plataformas con observabilidad “dual”.
-- **No por defecto**: si solo necesitas un backend, mantener un único registry reduce complejidad y coste.
-
-### Ejemplo (conceptual)
+### Ejemplo
 
 ~~~java
 CompositeMeterRegistry composite = new CompositeMeterRegistry();
@@ -100,135 +130,45 @@ Counter c = composite.counter("business.operations", "operation", "payment_confi
 c.increment(); // se refleja en ambos registries
 ~~~
 
-**Nota Spring Boot**: cuando hay más de un exportador/registry configurado, Spring Boot puede acabar exponiendo un `MeterRegistry` que actúa como agregador (comportamiento equivalente a un composite), de forma que tu código sigue inyectando `MeterRegistry` sin enterarse de cuántos backends hay detrás.
+**Nota**: en Spring cuando hay más de un exportador/registry configurado, Spring Boot puede acabar exponiendo un `MeterRegistry` que actúa como agregador (comportamiento equivalente a un composite), de forma que tu código sigue inyectando `MeterRegistry` sin enterarse de cuántos backends hay detrás.
 
 
-## 2) Tipos de *meters* y qué genera en Prometheus
+## 2) Tipos de *meters*
 
 Micrometer soporta (entre otros):
 
 - **Counter**: acumulativo monótono (en Prometheus suele acabar como `*_total`).
+```mermaid
+xychart-beta
+  title "Counter: solo incrementa (acumulado)"
+  x-axis "t" ["t0","t1","t2","t3","t4","t5"]
+  y-axis "total" 0 --> 120
+  line "events_total" [0,10,25,50,80,110]
+```
 - **Gauge**: valor instantáneo (sube/baja).
+```mermaid
+xychart-beta
+  title "Gauge: estado instantáneo (sube y baja)"
+  x-axis "t" ["t0","t1","t2","t3","t4","t5"]
+  y-axis "value" 0 --> 50
+  line "in_flight" [5,12,8,35,20,10]
+```
 - **Timer**: duración y conteo (en Prometheus expone `_count`, `_sum` y opcionalmente `_bucket` si hay histograma).
 - **DistributionSummary**: distribución de un valor **no temporal** (tamaños, bytes, etc.) → `_count`, `_sum` y opcionalmente buckets.
+```mermaid
+xychart-beta
+  title "Histogram: percentiles (p50/p95/p99) para ver la cola"
+  x-axis "t" ["t0","t1","t2","t3","t4","t5"]
+  y-axis "ms" 0 --> 1200
+  line "p50" [80,85,90,95,90,85]
+  line "p95" [180,190,220,300,260,210]
+  line "p99" [300,320,450,1100,700,420]
+```
+
+
 - **LongTaskTimer**: tareas largas “en curso” (útil para jobs o procesos con duración no trivial).
 - **FunctionCounter / TimeGauge**: variantes basadas en funciones/lecturas.
 
-
-## 3) Micrometer: uso e inyección de `MeterRegistry`, `CompositeMeterRegistry` y “operadores” (meters)
-
-Esta sección aterriza dos ideas:
-
-1) **Qué significa `builder(...).register(registry)`**  
-2) **Qué ocurre si hay varios registries y un `CompositeMeterRegistry`**  
-
-Además incluye un patrón didáctico de **inyección escalada**:
-- (Fase 1) crear registries “leaf” (específicos),
-- (Fase 2) componerlos en un `CompositeMeterRegistry`,
-- (Fase 3) definir “operadores” (Counter/Timer/Gauge/Summary) como **beans** registrados contra el composite.
-
-
-
-###  Qué hace realmente `register(registry)`
-
-En Micrometer, el `builder()` **no registra** nada. Solo construye la definición del meter.
-
-- `Counter.builder("x")...` = **define** nombre, tags, descripción, unidades, etc.
-- `.register(registry)` = **registra** (alta) ese meter en el `MeterRegistry` y devuelve la instancia final.
-
-### Clave semántica
-Un meter se identifica por su **ID**:
-- **nombre + conjunto de tags** (y algún metadato adicional interno).
-
-Si vuelves a pedir/registrar el mismo ID en el mismo registry, Micrometer tiende a:
-- **devolver el mismo meter** (reutilización), o
-- en algunos casos, **rechazar** si intentas registrar algo “incompatible” con el mismo ID.
-
-
-
-###  Qué cambia con `CompositeMeterRegistry`
-
-`CompositeMeterRegistry` es un `MeterRegistry` que **delegará** en varios registries “reales” (*leaf registries*).
-
-### Si haces `register(composite)`
-- El meter queda registrado “a través” del composite.
-- Y el composite se encarga de que:
-  - las operaciones (`increment`, `record`, etc.) se **propaguen** a todos los registries miembros.
-
-### Implicación práctica
-- Instrumentas **una vez**.
-- Publicas en **N backends** (si hay N registries detrás).
-
-### Importante: “añadir registries después”
-Técnicamente puedes añadir registries al composite “en caliente”, pero operativamente **es un antipatrón**:
-- introduces dependencia del orden de inicialización,
-- puedes ver ventanas de tiempo donde un backend “nuevo” no refleja lo anterior,
-- dificulta razonar sobre por qué ciertas series aparecen o no.
-
-En Spring Boot, la práctica estándar es: **registries se configuran al arranque**, no dinámicamente.
-
-
-
-###  Inyección escalada
-
-Nota: esto es un patrón “explicativo”. En un Spring Boot típico con Actuator/exporters, normalmente **no creas registries a mano**; se auto-configuran. Pero el siguiente montaje ilustra perfectamente lo que preguntas.
-
-#### Fase 1 — Crear registries específicos (leaf registries)
-
-Aquí uso `SimpleMeterRegistry` para que el ejemplo sea autocontenido. En la vida real, tus leaf registries serían `PrometheusMeterRegistry`, `DatadogMeterRegistry`, OTLP, etc.
-
-~~~java
-@Configuration
-public class LeafRegistriesConfig {
-
-    @Bean
-    public MeterRegistry registryA() {
-        return new SimpleMeterRegistry();
-    }
-
-    @Bean
-    public MeterRegistry registryB() {
-        return new SimpleMeterRegistry();
-    }
-}
-~~~
-
-#### Fase 2 — Componerlos en un `CompositeMeterRegistry`
-
-Este bean depende de los leaf registries: cuando se crea, ya los recibe y los añade.
-
-~~~java
-@Configuration
-public class CompositeRegistryConfig {
-
-    @Bean
-    public CompositeMeterRegistry compositeMeterRegistry(
-            MeterRegistry registryA,
-            MeterRegistry registryB
-    ) {
-        CompositeMeterRegistry composite = new CompositeMeterRegistry();
-        composite.add(registryA);
-        composite.add(registryB);
-        return composite;
-    }
-}
-~~~
-
-**Qué garantiza esto**  
-- Como el composite **depende** de `registryA` y `registryB`, Spring construye primero los leaf registries.
-- Luego construye el composite ya “cableado”.
-- Así evitas el problema de “añadir registries tarde”.
-
-#### Fase 3 — Definir “operadores” (meters) como beans registrados contra el composite
-
-Aquí se ve explícitamente tu pregunta: **`register(registry)` registra el meter en el registry**.  
-Si el registry es composite, queda instrumentado para todos los miembros.
-
-Incluyo más que counters:
-- `Counter` (eventos acumulativos)
-- `Timer` (latencias)
-- `DistributionSummary` (tamaños/cantidades no temporales)
-- `Gauge` (estado instantáneo con `AtomicInteger`)
 
 ~~~java
 @Configuration
@@ -279,7 +219,7 @@ public class OperatorsConfig {
 }
 ~~~
 
-###  Uso desde un servicio (inyección de “operadores”)
+###  Uso desde un servicio
 
 ~~~java
 @Service
@@ -315,12 +255,6 @@ public class EmployeeService {
 }
 ~~~
 
-**Qué has conseguido con este enfoque**
-- Los meters están **centralizados** y gobernados (naming/tags consistentes).
-- Se registran **una vez** en el composite.
-- Las operaciones se replican a **todos los leaf registries**.
-
-
 
 ## 4) Variantes útiles (cuando los tags no son fijos)
 
@@ -343,26 +277,6 @@ public class EmployeeService2 {
 }
 ~~~
 
-
-
-## 5) Reglas operativas (para que no se vuelva “chungo”)
-
-- **No mezcles** `Metrics.globalRegistry` con DI en Spring salvo que tengas una razón muy clara (librería sin acceso al contenedor).
-- **Evita** añadir registries al composite dinámicamente durante ejecución; hazlo al arranque.
-- Si defines meters como beans:
-  - tags fijos → perfecto.
-  - tags variables → mejor inyectar `MeterRegistry` y crear por demanda, con cardinalidad controlada.
-- Composite implica **coste multiplicado** (N backends → N ingestiones/almacenamientos).
-
-
-
-## 6) Mapa directo a tus 2 preguntas
-
-1) **“¿`register(registry)` registra el counter?”**  
-   Sí: `register(...)` es el punto en el que el meter queda dado de alta en el registry.
-
-2) **“¿Qué pasa con varios registries y un composite?”**  
-   Si registras contra el composite, el meter se instrumenta una vez y sus operaciones se delegan a todos los registries miembros. Por eso el composite es el mecanismo estándar para multi-backend/migraciones.
 
 
 ## 4) Dependencias y wiring típico (Spring Boot 3 + Prometheus)
@@ -473,17 +387,17 @@ En este punto, lo importante es lo que **no** haces: no añades `_total`, no esc
 
 
 
-### 2) Convención exportada (backend): cómo lo “traduce” el `MeterRegistry`
+### 2) Naming Conventions
 
-El registry aplica una `NamingConvention` que convierte tu nombre lógico al formato exigido por el backend. En Prometheus, el resultado típico es que el nombre pasa a *snake_case* (`.` → `_`) y aparecen sufijos/series derivados por tipo.
+El registry aplica una `NamingConvention` que convierte el nombre lógico al formato exigido por el backend. En Prometheus, el resultado típico es que el nombre pasa a *snake_case* (`.` → `_`) y aparecen sufijos/series derivados por tipo.
 
-Por ejemplo, si tu contrato Micrometer es:
+Por ejemplo, si el contrato Micrometer es:
 
 - Counter: `empleados.creados{oficina="benito_juarez"}`
 - Timer: `empleados.alta.duration{oficina="benito_juarez"}`
 - Summary (DistributionSummary): `empleados.payload.size{oficina="benito_juarez", baseUnit="bytes"}`
 
-en Prometheus **normalmente** verás algo conceptualmente equivalente a:
+en Prometheus **normalmente** se verá algo conceptualmente equivalente a:
 
 - Counter:
   - `empleados_creados_total{oficina="benito_juarez"}`
@@ -499,15 +413,13 @@ en Prometheus **normalmente** verás algo conceptualmente equivalente a:
 
 La idea no es memorizar exactamente cada sufijo, sino entender el patrón: el backend puede “desdoblar” un solo instrumento Micrometer en varias series porque necesita exponer **count**, **sum** y (si aplica) **buckets** para histogramas. En Prometheus, un histograma se representa con buckets acumulativos (`_bucket` + label `le`), además del `count` y el `sum`.
 
-Este es el motivo por el que, si tú escribieras `empleados.creados_total` en el nombre lógico, terminarías con redundancias como `*_total_total`. Por eso el contrato lógico debe ser limpio y el “sufijado” debe ser responsabilidad del registry/exporter.
-
+Este es el motivo por el que, si se escribiera `empleados.creados_total` en el nombre lógico, se  terminaría con redundancias como `*_total_total`. Por eso el contrato lógico debe ser limpio y el “sufijado” debe ser responsabilidad del registry/exporter.
 
 
 ### 3) Gobierno y seguridad semántica: `MeterFilter` para normalizar y evitar explosiones
 
-La convención por sí sola no evita el problema típico: alguien introduce un tag con alta cardinalidad (`userId`, `documentUuid`, `email`) o crea nombres inconsistentes (“duración en ms” en unos sitios y “seconds” en otros). Para eso está `MeterFilter`: una cadena de filtros aplicada por el registry que te permite **renombrar**, **reescribir tags** o **denegar** métricas que no cumplen el contrato.
+La convención por sí sola no evita el problema típico: alguien introduce un tag con alta cardinalidad (`userId`, `documentUuid`, `email`) o crea nombres inconsistentes (“duración en ms” en unos sitios y “seconds” en otros). Para eso está `MeterFilter`: una cadena de filtros aplicada por el registry que  permite **renombrar**, **reescribir tags** o **denegar** métricas que no cumplen el contrato. Ejemplo
 
-Un ejemplo razonable (sin convertir esto en un framework interno) es protegerte contra tags prohibidos y normalizar nombres legacy.
 
 ~~~java
 @Configuration
@@ -516,7 +428,7 @@ public class MetricsGovernanceConfig {
     @Bean
     public MeterRegistryCustomizer<MeterRegistry> metricsGovernance() {
         return registry -> registry.config()
-                // Ejemplo: common tags (identidad mínima, baja cardinalidad)
+                // Ejemplo: common tags. Se añaden a todas las métricas, sería algo así como series por defecto
                 .commonTags("service", "employee-service", "env", "dev")
 
                 // 1) Denegar métricas que usen tags prohibidos (alta cardinalidad)
@@ -537,15 +449,3 @@ public class MetricsGovernanceConfig {
     }
 }
 ~~~
-
-La capa de gobierno es lo que te permite decir “sí, el equipo puede instrumentar rápido”, pero sin permitir que cualquier decisión de tags/nombres se convierta en un problema de costes o de operabilidad. Además, como todo pasa por el registry, esta capa funciona igual si tu backend es Prometheus o si mañana tienes un `CompositeMeterRegistry` publicando a varios destinos: el contrato se mantiene.
-
-
-
-### Cierre: cómo conectar esto con tu sección de “Convenciones mínimas”
-
-Tu sección de convenciones (unidades, sufijos, semántica) es válida, pero el ajuste importante al integrarla con Micrometer es conceptual: las convenciones de sufijos (`_total`, `_seconds`, `_bucket`) suelen ser parte de la **convención exportada** del backend, no necesariamente del nombre lógico Micrometer. Por eso, en un dossier que pretende ser operable, queda redondo separar explícitamente:
-
-1) “Cómo lo nombro en el código” (Micrometer),
-2) “Cómo lo veré en Prometheus” (transformación),
-3) “Cómo lo gobierno para que no se degrade” (`MeterFilter` y tags de baja cardinalidad).
