@@ -1,47 +1,5 @@
 # Docker - Introducción
 
-## Esquema 
-
-```mermaid
-flowchart LR
-  %% =========================
-  %% INTRODUCCIÓN A LOS CONTENEDORES (apaisado)
-  %% =========================
-
-  subgraph I["INTRODUCCIÓN A LOS CONTENEDORES"]
-    direction TB
-
-    subgraph VM["DIFERENCIAS CON LAS MÁQUINAS VIRTUALES"]
-      direction LR
-      VM1["Virtualizan el sistema operativo<br>en vez del hardware"]
-      VM2["Más ligeros en tamaño"]
-      VM3["Menor tiempo de arranque"]
-      VM4["Comparten el kernel del host"]
-      VM5["Facilita el versionado y<br>comparación de imágenes"]
-    end
-
-    subgraph B["BENEFICIOS DE LOS CONTENEDORES (Docker)"]
-      direction LR
-      B1["Fácilmente portables<br>y escalables"]
-      B2["Mejor aprovechamiento<br>del hardware"]
-      B3["Empaquetado y<br>versionado"]
-      B4["Actualizaciones de<br>software sencillas"]
-      B5["Facilitan los<br>microservicios"]
-      B6["Idóneos para<br>CI/CD"]
-    end
-
-    subgraph D["DOCKER"]
-      direction LR
-
-      A["Arquitectura"] --> ABox["Cliente de Docker (CLI)<br>Demonio de Docker (dockerd)<br>Objeto Docker (contenedores, imágenes, redes, volúmenes)<br>Registros Docker (privados y públicos)"]
-
-      T["Tecnología"] --> TBox["Namespaces: aislamiento<br>Cgroups: control de recursos<br>UnionFS: sistema de archivos<br>Libcontainer: formato contenedor"]
-
-      I0["Instalación"] --> IBox["Repositorio de Docker<br>Descarga e instalación manual<br>Scripts de instalación de Docker<br>Docker Desktop en Windows y Mac<br>Crear Machine con Docker Machine"]
-    end
-  end
-```
-
 ## Hipervisor
 
 ### Definición
@@ -96,7 +54,7 @@ Una imagen es un paquete inmutable que:
 Un **contenedor** es (4 cosas) :
 * **instancia aislada** creada a partir de una imagen
 * ejecuta la aplicación de forma consistente entre entornos
-* usando el kernel de la máquina anfitriona **sin hipervisor** 
+* usando el kernel de la máquina anfitriona **compartiendo el kernel del host** 
 * **más ligero** que una máquina virtual.
 
 
@@ -112,7 +70,7 @@ Un **contenedor** es (4 cosas) :
 
 1. Se construye la imagen: paquete reproducible con lo que la aplicación necesita para ejecutarse.
 2. Distribuir la imagen: publicar la imagen para poder usarla en local, en un datacenter o en la nube.
-3. Ejecutar la imagen: arrancar contenedores a partir de esa imagen de forma rápida y consistente.
+3. Ejecutar contenedores a partir de la imagen: arrancar contenedores a partir de esa imagen de forma rápida y consistente.
 
 ### Arquitectura
 
