@@ -1,0 +1,14 @@
+
+alertmanager:
+  enabled: false
+pushgateway:
+  enabled: false
+
+kubeStateMetrics:
+  enabled: true
+nodeExporter:
+  enabled: false
+
+server:
+  persistentVolume:
+    enabled: false
