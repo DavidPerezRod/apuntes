@@ -45,7 +45,7 @@ RabbitMQ se basa en elementos básicos del protocolo AMQP, cuya funcionalidad se
 
 | Concepto RabbitMQ   | Analogía postal                               | Rol                                                                                                        |
 | ------------------- | --------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| **Publisher**       | ✉️ **Remitente (persona que envía la carta)** | Es quien crea el mensaje y lo entrega en la oficina (exchange).                                            |
+| **Producer**       | ✉️ **Remitente (persona que envía la carta)** | Es quien crea el mensaje y lo entrega en la oficina (exchange).                                            |
 | **Exchange**        | 🏢 **Centro de distribución postal**          | Recibe las cartas, lee la dirección (routing key) y las envía por la ruta adecuada.                        |
 | **Routing key**     | 🏷️ **Dirección postal escrita en el sobre**  | Indica a qué zona o destinatario debe llegar la carta.                                                     |
 | **Binding**         | 🪢 **Ruta logística o regla de envío**        | Define qué buzones (queues) están conectados a qué centros (exchanges) y bajo qué criterios (direcciones). |
